@@ -35,28 +35,35 @@ object SmartStream {
     }
   }
 
-  def sum(s : SmartStream[Int]) : Int = s match {
+  def sum(s: SmartStream[Int]) : Int = s match {
     case Nil => 0
     case Cons(h, t) => h() + sum(t())
   }
 
-  def product(s : SmartStream[Int]) : Int = s match {
+  def product(s: SmartStream[Int]) : Int = s match {
     case Nil => 1
     case Cons(h, t) => h() * product(t())
   }
 
-  def foldRight[A,B](s : SmartStream[A])(z : B)(f : (A,B) => B) : B = s match {
+  def foldRight[A,B](s: SmartStream[A])(z : B)(f :(A,B) => B) : B = s match {
     case Nil => z
     case Cons(h, t) => foldLeft(s)(z)(f)
   }
 
   @tailrec
-  def foldLeft[A,B](s : SmartStream[A])(z : B)(f : (A,B) => B) : B = s match {
+  def foldLeft[A,B](s: SmartStream[A])(z : B)(f :(A,B) => B) : B = s match {
     case Nil => z
     case Cons(h, t) => foldLeft(t())(f(h(),z))(f)
   }
 
-  // def drop_while(elem : A, s : SmartStream[A]) : SmartStream[A] = {
-    
-  // }
+  def drop_while[A](pred: A => Boolean, s: SmartStream[A]) : SmartStream[A] = {
+    case Nil => Nil
+    case Cons(h, t) => {
+      if (!pred(h())) {
+        drop_while(pred, t())
+      } else {
+        Cons(h,t)
+      }
+    }
+  }
 }
