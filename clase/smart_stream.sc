@@ -56,11 +56,11 @@ object SmartStream {
     case Cons(h, t) => foldLeft(t())(f(h(),z))(f)
   }
 
-  def drop_while[A](pred: A => Boolean, s: SmartStream[A]) : SmartStream[A] = {
+  def dropWhile[A](pred: A => Boolean, s: SmartStream[A]) : SmartStream[A] = s match {
     case Nil => Nil
     case Cons(h, t) => {
       if (!pred(h())) {
-        drop_while(pred, t())
+        dropWhile(pred, t())
       } else {
         Cons(h,t)
       }
