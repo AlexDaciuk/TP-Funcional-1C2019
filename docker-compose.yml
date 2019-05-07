@@ -1,0 +1,9 @@
+version: 1
+services:
+  db:
+    image: "postgres:11.2-alpine"
+    enviroment:
+      POSTGRES_USER: "funcional"
+      POSTGRES_PASSWORD: "funcional"
+    ports:
+      - "5432:5432"
