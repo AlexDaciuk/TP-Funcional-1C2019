@@ -67,3 +67,10 @@ object SmartStream {
     }
   }
 }
+
+
+val myStream = SmartStream[Int](14,5,3,4,5,6)
+def lt(a: Int)(b: Int) : Boolean = { b < a }
+val lt_five = lt(5)(_: Int)
+val peron = SmartStream.dropWhile(lt_five, myStream)
+SmartStream.sum(peron)
