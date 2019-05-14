@@ -4,6 +4,5 @@ services:
     image: "postgres:11.2-alpine"
     environment:
       POSTGRES_USER: "funcional"
-      POSTGRES_PASSWORD: "funcional"
     ports:
       - "5432:5432"
