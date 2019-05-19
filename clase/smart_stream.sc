@@ -4,12 +4,14 @@ import scala.annotation.tailrec
 // sealed: todas las definiciones del trait se limitan a ese archivo
 // trait: es como definir interfaces
 // [+A] Es un generic covariante: o sea, si B es subtipo de A, Stream[B] es subtipo de Stream[A]
-sealed trait SmartStream[+A] 
+// Constructores de Tipo (Type Constructor)
+sealed trait SmartStream[+A]
 
-// Data constructor: representa un stream vacío
+// Data constructor
+// Representa un stream vacío
 case object Nil extends SmartStream[Nothing]
 // Case class define otra forma de representar un Smart stream
-case class Cons[+A](h : () => A, t : () => SmartStream[A]) extends SmartStream[A]
+case class Cons[+A](h : () => A, t: () => SmartStream[A]) extends SmartStream[A]
 
 // object companion: singleton que define el comportamiento del Smart stream (por eso tiene el mismo nombre que la clase)
 object SmartStream {
