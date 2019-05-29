@@ -8,4 +8,6 @@ object leerCSV extends App{
   val reader = data.asCsvReader[List[String]](rfc.withHeader)
 
   val fila = List[String](reader.next())
+
+
 }

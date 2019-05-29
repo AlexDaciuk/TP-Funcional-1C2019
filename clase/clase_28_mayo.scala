@@ -12,4 +12,4 @@ val maybeFullName = maybeFirstName.flatMap{firstName => maybeLastName.map{ lastN
 val maybeFullName = for {
   firstName <- maybeFirstName
   lastName <- maybeLastName
-} yield firstName + " " + lastName
+} yield firstName + " " + lastName  
