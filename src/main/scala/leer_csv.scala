@@ -30,7 +30,7 @@ object leerCSV extends App {
   )
 
   var crearTable = sql"""
-            create table prueba3(
+            create table data(
             maiScore  integer,
             deviceMatch  integer,
             factorCodes  integer,
