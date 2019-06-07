@@ -8,9 +8,6 @@ import cats.effect._
 import kantan.csv._ // All kantan.csv types.
 import kantan.csv.ops._ // Enriches types with useful methods.
 import kantan.codecs.resource.ResourceIterator
-import doobie._
-import doobie.implicits._
-import doobie.util.ExecutionContexts
 import fs2.Stream
 
 object leerCSV extends App {
@@ -118,7 +115,7 @@ object leerCSV extends App {
             online_state_bond  integer,
             payment_card_type  text,
             payment_installments  integer,
-            same_field_features  text,
+            same_field_features  json,
             speed_to_departure  real,
             total_usd_amounts  integer,
             triangulation_height  real,
@@ -349,7 +346,7 @@ object leerCSV extends App {
     val slice5 = lista.slice(86, 92)
     val quintaParte = QuintaParte(
       slice5(0).toInt,
-      slice5(1),
+      slice5(1).replace(" u ", "").replace(" \'"," \"").patch(0,"\'",0).concat("'") ,
       slice5(2).toFloat,
       slice5(3).toInt,
       slice5(4).toFloat,
@@ -558,27 +555,28 @@ object leerCSV extends App {
     """.update
 
 
-  def cargar_db(lista: List[String]): Either[String, Unit] = {
-    insertar(procesar_primera_parte(lista),
-             procesar_segunda_parte(lista),
-             procesar_tercera_parte(lista),
-             procesar_cuarta_parte(lista),
-             procesar_quinta_parte(lista))
-  }
-
-  def iterador(lista: ReadResult[List[String]]): Either[String, String] = {
-    println("Entre")
-    lista match {
-      case Right(l) => {
-        cargar_db(l) match {
-          case Right(l) => iterador(reader.next())
-          case Left(k) => Left("Fallo la carga a la db")
-        }
-      }
-      case Left(k) => Left("Termino el archivo")
-    }
-  }
-
-  iterador(reader.next())
-
+//  def cargar_db(lista: List[String]): Either[String, Unit] = {
+//    insertar(procesar_primera_parte(lista),
+//             procesar_segunda_parte(lista),
+//             procesar_tercera_parte(lista),
+//             procesar_cuarta_parte(lista),
+//             procesar_quinta_parte(lista))
+//  }
+//
+//  def iterador(lista: ReadResult[List[String]]): Either[String, String] = {
+//    println("Entre")
+//    lista match {
+//      case Right(l) => {
+//        cargar_db(l) match {
+//          case Right(l) => iterador(reader.next())
+//          case Left(k) => Left("Fallo la carga a la db")
+//        }
+//      }
+//      case Left(k) => Left("Termino el archivo")
+//    }
+//  }
+//
+//  iterador(reader.next())
+//
+//}
 }
