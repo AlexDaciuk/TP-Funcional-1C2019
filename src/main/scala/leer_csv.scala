@@ -34,7 +34,7 @@ object leerCSV extends App {
             factorCodes  integer,
             firstEncounter  integer,
             icAddress  integer,
-            icintegerernet  integer,
+            icInternet  integer,
             icSuspicious  integer,
             icVelocity  integer,
             icIdentity  integer,
@@ -110,7 +110,6 @@ object leerCSV extends App {
             online_family_bond  integer,
             online_ip_state  integer,
             online_name  integer,
-            online_code  integer,
             online_phone  integer,
             online_queries  integer,
             online_state_bond  integer,
@@ -122,7 +121,7 @@ object leerCSV extends App {
             triangulation_height  real,
             triangulation_height_speed  real,
             trip_distance  real
-          ) """.update.run
+          ) """.update
 
   case class PrimeraParte(maiScore: Int,
                           deviceMatch: Int,
@@ -210,7 +209,6 @@ object leerCSV extends App {
                          online_family_bond: Int,
                          online_ip_state: Int,
                          online_name: Int,
-                         online_code: Int,
                          online_phone: Int,
                          online_queries: Int,
                          online_state_bond: Int,
@@ -245,6 +243,7 @@ object leerCSV extends App {
 
   def procesar_primera_parte(lista: List[String]): PrimeraParte = {
     val slice1 = lista.slice(0, 21)
+    println(slice1)
     val primeraParte = PrimeraParte(
       toIntPropio(slice1(0)),
       toIntPropio(slice1(1)),
@@ -273,6 +272,7 @@ object leerCSV extends App {
 
   def procesar_segunda_parte(lista: List[String]): SegundaParte = {
     val slice2 = lista.slice(21, 42)
+    println(slice2)
     val segundaParte = SegundaParte(
       toIntPropio(slice2(0)),
       slice2(1),
@@ -302,6 +302,7 @@ object leerCSV extends App {
 
   def procesar_tercera_parte(lista: List[String]): TerceraParte = {
     val slice3 = lista.slice(42, 64)
+    println(slice3)
     val terceraParte = TerceraParte(
       slice3(0),
       slice3(1),
@@ -331,7 +332,8 @@ object leerCSV extends App {
   }
 
   def procesar_cuarta_parte(lista: List[String]): CuartaParte = {
-    val slice4 = lista.slice(64, 86)
+    val slice4 = lista.slice(64, 85)
+    println(slice4)
     val cuarteParte = CuartaParte(
       slice4(0),
       slice4(1),
@@ -353,15 +355,15 @@ object leerCSV extends App {
       toIntPropio(slice4(17)),
       toIntPropio(slice4(18)),
       toIntPropio(slice4(19)),
-      toIntPropio(slice4(20)),
-      slice4(21)
+      slice4(20)
     )
 
     cuarteParte
   }
 
   def procesar_quinta_parte(lista: List[String]): QuintaParte = {
-    val slice5 = lista.slice(86, 92)
+    val slice5 = lista.slice(85, 92)
+    println(slice5)
     val quintaParte = QuintaParte(
       toIntPropio(slice5(0)),
       slice5(1).replace(" u ", "").replace(" \'"," \"").patch(0,"\'",0).concat("'") ,
@@ -383,12 +385,12 @@ object leerCSV extends App {
     sql"""
     insert
     	into
-    		funcional( maiScore,
+    		data( maiScore,
     		deviceMatch,
     		factorCodes,
     		firstEncounter,
     		icAddress,
-    		icernet,
+    		icInternet,
     		icSuspicious,
     		icVelocity,
     		icIdentity,
@@ -464,7 +466,6 @@ object leerCSV extends App {
     		online_family_bond,
     		online_ip_state,
     		online_name,
-    		online_code,
     		online_phone,
     		online_queries,
     		online_state_bond,
@@ -557,7 +558,6 @@ object leerCSV extends App {
         ${cuartaParte.online_family_bond},
         ${cuartaParte.online_ip_state},
         ${cuartaParte.online_name},
-        ${cuartaParte.online_code},
         ${cuartaParte.online_phone},
         ${cuartaParte.online_queries},
         ${cuartaParte.online_state_bond},
@@ -598,6 +598,7 @@ object leerCSV extends App {
     }
   }
 
+  crearTable.run.transact(conexion).unsafeRunSync
   iterador(reader.next())
 
 }
