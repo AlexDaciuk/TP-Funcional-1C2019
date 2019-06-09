@@ -29,7 +29,7 @@ object leerCSV extends App {
 
   var crearTable = sql"""
             create table data(
-            maiScore  integer,
+            mai_score  integer,
             deviceMatch  integer,
             factorCodes  integer,
             firstEncounter  integer,
@@ -49,37 +49,37 @@ object leerCSV extends App {
             pp_60  integer,
             pp_90  integer,
             caseDate  text,
-            caseMinuteDistance  integer,
-            casesCount  integer,
+            case_minutes_distance  integer,
+            cases_count  integer,
             channel  text,
-            correlID  integer,
-            countDifferentCards  integer,
-            countDifferentInstallments  integer,
+            correl_id  integer,
+            count_diferent_cards  integer,
+            count_diferent_installments  integer,
             countryCode  text,
             countryFrom  text,
             countryTo  text,
-            distanceToArrival  real,
-            distanceToDeparture  real,
+            distance_to_arrival  real,
+            distance_to_departure  real,
             domainProc  real,
-            maiAdvice  integer,
-            maiVerification  text,
-            maiReason  integer,
-            maiRisk  integer,
-            maibisScore  integer,
-            maiStatus  integer,
-            maiUnique  integer,
-            maiAvgSecs  integer,
-            maiBuys  integer,
-            maySearches  integer,
+            mai_advice  integer,
+            mai_verification  text,
+            mai_reason  integer,
+            mai_risk  integer,
+            maibis_score  integer,
+            mai_status  integer,
+            mai_unique  integer,
+            mai_avg_secs  integer,
+            mai_buys  integer,
+            mai_searches  integer,
             eulerBadge  text,
             maiPax  text,
-            maiType  text,
-            maiRels  text,
-            maiApp  integer,
+            mai_type  text,
+            mai_rels  text,
+            mai_app  integer,
             mai_urgency   text,
             mai_network   text,
             mai_all_pax   text,
-            maiLastSeconds  integer,
+            mai_last_secs  integer,
             apocrypha  integer,
             friendly  integer,
             hours_since_last_verification  integer,
@@ -96,7 +96,7 @@ object leerCSV extends App {
             mai_city  text,
             mai_region  text,
             maitris_score  integer,
-            lag_time_hours  integer,
+            maiTimeHours  integer,
             many_holders_for_card  real,
             many_name_for_document  real,
             online_airport_state  integer,
@@ -113,17 +113,21 @@ object leerCSV extends App {
             online_phone  integer,
             online_queries  integer,
             online_state_bond  integer,
-            payment_card_type  text,
-            payment_installments  integer,
+            paymentscardtype  text,
+            paymentsinstallments  integer,
             same_field_features  json,
             speed_to_departure  real,
-            total_usd_amounts  integer,
+            totalusdamounts  integer,
             triangulation_height  real,
             triangulation_height_speed  real,
             trip_distance  real
           ) """.update
 
-  case class PrimeraParte(maiScore: Int,
+  var crearIndiceCorrelId = sql"""
+  create index idx_correl_it on data(correl_id)
+  """.update
+
+  case class PrimeraParte(mai_score: Int,
                           deviceMatch: Int,
                           factorCodes: Int,
                           firstEncounter: Int,
@@ -143,40 +147,40 @@ object leerCSV extends App {
                           pp_60: Int,
                           pp_90: Int,
                           caseDate: String,
-                          caseMinuteDistance: Int)
+                          case_minutes_distance: Int)
 
-  case class SegundaParte(casesCount: Int,
+  case class SegundaParte(cases_count: Int,
                           channel: String,
-                          correlID: Int,
-                          countDifferentCards: Int,
-                          countDifferentInstallments: Int,
+                          correl_id: Int,
+                          count_diferent_cards: Int,
+                          count_diferent_installments: Int,
                           countryCode: String,
                           countryFrom: String,
                           countryTo: String,
-                          distanceToArrival: Double,
-                          distanceToDeparture: Double,
+                          distance_to_arrival: Double,
+                          distance_to_departure: Double,
                           domainProc: Double,
-                          maiAdvice: Int,
-                          maiVerification: String,
-                          maiReason: Int,
-                          maiRisk: Int,
-                          maibisScore: Int,
-                          maiStatus: Int,
-                          maiUnique: Int,
-                          maiAvgSecs: Int,
-                          maiBuys: Int,
-                          maySearches: Int)
+                          mai_advice: Int,
+                          mai_verification: String,
+                          mai_reason: Int,
+                          mai_risk: Int,
+                          maibis_score: Int,
+                          mai_status: Int,
+                          mai_unique: Int,
+                          mai_avg_secs: Int,
+                          mai_buys: Int,
+                          mai_searches: Int)
 
   case class TerceraParte(
       eulerBadge: String,
       maiPax: String,
-      maiType: String,
-      maiRels: String,
-      maiApp: Int,
+      mai_type: String,
+      mai_rels: String,
+      mai_app: Int,
       mai_urgency: String,
       mai_network: String,
       mai_all_pax: String,
-      maiLastSeconds: Int,
+      mai_last_secs: Int,
       apocrypha: Int,
       friendly: Int,
       hours_since_last_verification: Int,
@@ -195,7 +199,7 @@ object leerCSV extends App {
   case class CuartaParte(mai_city: String,
                          mai_region: String,
                          maitris_score: Int,
-                         lag_time_hours: Int,
+                         maiTimeHours: Int,
                          many_holders_for_card: Double,
                          many_name_for_document: Double,
                          online_airport_state: Int,
@@ -212,13 +216,13 @@ object leerCSV extends App {
                          online_phone: Int,
                          online_queries: Int,
                          online_state_bond: Int,
-                         payment_card_type: String)
+                         paymentscardtype: String)
 
   case class QuintaParte(
-      payment_installments: Int,
+      paymentsinstallments: Int,
       same_field_features: String,
       speed_to_departure: Double,
-      total_usd_amounts: Int,
+      totalusdamounts: Int,
       triangulation_height: Double,
       triangulation_height_speed: Double,
       trip_distance: Double
@@ -243,7 +247,6 @@ object leerCSV extends App {
 
   def procesar_primera_parte(lista: List[String]): PrimeraParte = {
     val slice1 = lista.slice(0, 21)
-    println(slice1)
     val primeraParte = PrimeraParte(
       toIntPropio(slice1(0)),
       toIntPropio(slice1(1)),
@@ -272,7 +275,6 @@ object leerCSV extends App {
 
   def procesar_segunda_parte(lista: List[String]): SegundaParte = {
     val slice2 = lista.slice(21, 42)
-    println(slice2)
     val segundaParte = SegundaParte(
       toIntPropio(slice2(0)),
       slice2(1),
@@ -302,7 +304,6 @@ object leerCSV extends App {
 
   def procesar_tercera_parte(lista: List[String]): TerceraParte = {
     val slice3 = lista.slice(42, 64)
-    println(slice3)
     val terceraParte = TerceraParte(
       slice3(0),
       slice3(1),
@@ -333,7 +334,6 @@ object leerCSV extends App {
 
   def procesar_cuarta_parte(lista: List[String]): CuartaParte = {
     val slice4 = lista.slice(64, 85)
-    println(slice4)
     val cuarteParte = CuartaParte(
       slice4(0),
       slice4(1),
@@ -363,10 +363,9 @@ object leerCSV extends App {
 
   def procesar_quinta_parte(lista: List[String]): QuintaParte = {
     val slice5 = lista.slice(85, 92)
-    println(slice5)
     val quintaParte = QuintaParte(
       toIntPropio(slice5(0)),
-      slice5(1).replace(" u ", "").replace(" \'"," \"").patch(0,"\'",0).concat("'") ,
+      slice5(1).replace("u'", "\"").replace("\'","\"").replace("\"\"","\"").patch(0,"\'",0).concat("'"),
       toFloatPropio(slice5(2)),
       toIntPropio(slice5(3)),
       toFloatPropio(slice5(4)),
@@ -385,7 +384,7 @@ object leerCSV extends App {
     sql"""
     insert
     	into
-    		data( maiScore,
+    		data( mai_score,
     		deviceMatch,
     		factorCodes,
     		firstEncounter,
@@ -405,37 +404,37 @@ object leerCSV extends App {
     		pp_60,
     		pp_90,
     		caseDate,
-    		caseMinuteDistance,
-    		casesCount,
+    		case_minutes_distance,
+    		cases_count,
     		channel,
-    		correlID,
-    		countDifferentCards,
-    		countDifferentInstallments,
+    		correl_id,
+    		count_diferent_cards,
+    		count_diferent_installments,
     		countryCode,
     		countryFrom,
     		countryTo,
-    		distanceToArrival,
-    		distanceToDeparture,
+    		distance_to_arrival,
+    		distance_to_departure,
     		domainProc,
-    		maiAdvice,
-    		maiVerification,
-    		maiReason,
-    		maiRisk,
-    		maibisScore,
-    		maiStatus,
-    		maiUnique,
-    		maiAvgSecs,
-    		maiBuys,
-    		maySearches,
+    		mai_advice,
+    		mai_verification,
+    		mai_reason,
+    		mai_risk,
+    		maibis_score,
+    		mai_status,
+    		mai_unique,
+    		mai_avg_secs,
+    		mai_buys,
+    		mai_searches,
     		eulerBadge,
     		maiPax,
-    		maiType,
-    		maiRels,
-    		maiApp,
+    		mai_type,
+    		mai_rels,
+    		mai_app,
     		mai_urgency,
     		mai_network,
     		mai_all_pax,
-    		maiLastSeconds,
+    		mai_last_secs,
     		apocrypha,
     		friendly,
     		hours_since_last_verification,
@@ -452,7 +451,7 @@ object leerCSV extends App {
     		mai_city,
     		mai_region,
     		maitris_score,
-    		lag_time_hours,
+    		maiTimeHours,
     		many_holders_for_card,
     		many_name_for_document,
     		online_airport_state,
@@ -469,15 +468,15 @@ object leerCSV extends App {
     		online_phone,
     		online_queries,
     		online_state_bond,
-    		payment_card_type,
-    		payment_installments,
+    		paymentscardtype,
+    		paymentsinstallments,
     		same_field_features,
     		speed_to_departure,
-    		total_usd_amounts,
+    		totalusdamounts,
     		triangulation_height,
     		triangulation_height_speed,
     		trip_distance )
-    	values ( ${primeraParte.maiScore},
+    	values ( ${primeraParte.mai_score},
         ${primeraParte.deviceMatch},
         ${primeraParte.factorCodes},
         ${primeraParte.firstEncounter},
@@ -497,37 +496,37 @@ object leerCSV extends App {
         ${primeraParte.pp_60},
         ${primeraParte.pp_90},
         ${primeraParte.caseDate},
-        ${primeraParte.caseMinuteDistance},
-        ${segundaParte.casesCount},
+        ${primeraParte.case_minutes_distance},
+        ${segundaParte.cases_count},
         ${segundaParte.channel},
-        ${segundaParte.correlID},
-        ${segundaParte.countDifferentCards},
-        ${segundaParte.countDifferentInstallments},
+        ${segundaParte.correl_id},
+        ${segundaParte.count_diferent_cards},
+        ${segundaParte.count_diferent_installments},
         ${segundaParte.countryCode},
         ${segundaParte.countryFrom},
         ${segundaParte.countryTo},
-        ${segundaParte.distanceToArrival},
-        ${segundaParte.distanceToDeparture},
+        ${segundaParte.distance_to_arrival},
+        ${segundaParte.distance_to_departure},
         ${segundaParte.domainProc},
-        ${segundaParte.maiAdvice},
-        ${segundaParte.maiVerification},
-        ${segundaParte.maiReason},
-        ${segundaParte.maiRisk},
-        ${segundaParte.maibisScore},
-        ${segundaParte.maiStatus},
-        ${segundaParte.maiUnique},
-        ${segundaParte.maiAvgSecs},
-        ${segundaParte.maiBuys},
-        ${segundaParte.maySearches},
+        ${segundaParte.mai_advice},
+        ${segundaParte.mai_verification},
+        ${segundaParte.mai_reason},
+        ${segundaParte.mai_risk},
+        ${segundaParte.maibis_score},
+        ${segundaParte.mai_status},
+        ${segundaParte.mai_unique},
+        ${segundaParte.mai_avg_secs},
+        ${segundaParte.mai_buys},
+        ${segundaParte.mai_searches},
         ${terceraParte.eulerBadge},
         ${terceraParte.maiPax},
-        ${terceraParte.maiType},
-        ${terceraParte.maiRels},
-        ${terceraParte.maiApp},
+        ${terceraParte.mai_type},
+        ${terceraParte.mai_rels},
+        ${terceraParte.mai_app},
         ${terceraParte.mai_urgency},
         ${terceraParte.mai_network},
         ${terceraParte.mai_all_pax},
-        ${terceraParte.maiLastSeconds},
+        ${terceraParte.mai_last_secs},
         ${terceraParte.apocrypha},
         ${terceraParte.friendly},
         ${terceraParte.hours_since_last_verification},
@@ -544,7 +543,7 @@ object leerCSV extends App {
         ${cuartaParte.mai_city},
         ${cuartaParte.mai_region},
         ${cuartaParte.maitris_score},
-        ${cuartaParte.lag_time_hours},
+        ${cuartaParte.maiTimeHours},
         ${cuartaParte.many_holders_for_card},
         ${cuartaParte.many_name_for_document},
         ${cuartaParte.online_airport_state},
@@ -561,11 +560,11 @@ object leerCSV extends App {
         ${cuartaParte.online_phone},
         ${cuartaParte.online_queries},
         ${cuartaParte.online_state_bond},
-        ${cuartaParte.payment_card_type},
-        ${quintaParte.payment_installments},
-        ${quintaParte.same_field_features},
+        ${cuartaParte.paymentscardtype},
+        ${quintaParte.paymentsinstallments},
+        (to_json(${quintaParte.same_field_features})),
         ${quintaParte.speed_to_departure},
-        ${quintaParte.total_usd_amounts},
+        ${quintaParte.totalusdamounts},
         ${quintaParte.triangulation_height},
         ${quintaParte.triangulation_height_speed},
         ${quintaParte.trip_distance}
@@ -586,7 +585,6 @@ object leerCSV extends App {
   }
 
   def iterador(lista: ReadResult[List[String]]): Either[String, String] = {
-    println("Entre")
     lista match {
       case Right(l) => {
         cargar_db(l) match {
@@ -600,5 +598,6 @@ object leerCSV extends App {
 
   crearTable.run.transact(conexion).unsafeRunSync
   iterador(reader.next())
+  crearIndiceCorrelId.run.transact(conexion).unsafeRunSync
 
 }
