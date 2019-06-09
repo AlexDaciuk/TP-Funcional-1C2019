@@ -18,6 +18,7 @@ object leerCSV extends App {
 
   // Me conecto a la db
   implicit val cs = IO.contextShift(ExecutionContexts.synchronous)
+
   val conexion = Transactor.fromDriverManager[IO](
     "org.postgresql.Driver", // driver classname
     "jdbc:postgresql:funcional", // connect URL (driver-specific)
@@ -153,9 +154,9 @@ object leerCSV extends App {
                           countryCode: String,
                           countryFrom: String,
                           countryTo: String,
-                          distanceToArrival: Float,
-                          distanceToDeparture: Float,
-                          domainProc: Float,
+                          distanceToArrival: Double,
+                          distanceToDeparture: Double,
+                          domainProc: Double,
                           maiAdvice: Int,
                           maiVerification: String,
                           maiReason: Int,
@@ -196,8 +197,8 @@ object leerCSV extends App {
                          mai_region: String,
                          maitris_score: Int,
                          lag_time_hours: Int,
-                         many_holders_for_card: Float,
-                         many_name_for_document: Float,
+                         many_holders_for_card: Double,
+                         many_name_for_document: Double,
                          online_airport_state: Int,
                          online_billing_address: Int,
                          online_cep_number_bond: Int,
@@ -218,37 +219,54 @@ object leerCSV extends App {
   case class QuintaParte(
       payment_installments: Int,
       same_field_features: String,
-      speed_to_departure: Float,
+      speed_to_departure: Double,
       total_usd_amounts: Int,
-      triangulation_height: Float,
-      triangulation_height_speed: Float,
-      trip_distance: Float
+      triangulation_height: Double,
+      triangulation_height_speed: Double,
+      trip_distance: Double
   )
+
+  def toIntPropio(s: String): Int = {
+    try {
+      s.toInt
+    } catch {
+      case e: Exception => -1
+    }
+  }
+
+  def toFloatPropio(s: String): Double = {
+    try {
+      s.toFloat
+    } catch {
+      case e: Exception => -1.0
+    }
+  }
+
 
   def procesar_primera_parte(lista: List[String]): PrimeraParte = {
     val slice1 = lista.slice(0, 21)
     val primeraParte = PrimeraParte(
-      slice1(0).toInt,
-      slice1(1).toInt,
-      slice1(2).toInt,
-      slice1(3).toInt,
-      slice1(4).toInt,
-      slice1(5).toInt,
-      slice1(6).toInt,
-      slice1(7).toInt,
-      slice1(8).toInt,
-      slice1(9).toInt,
-      slice1(10).toInt,
-      slice1(11).toInt,
+      toIntPropio(slice1(0)),
+      toIntPropio(slice1(1)),
+      toIntPropio(slice1(2)),
+      toIntPropio(slice1(3)),
+      toIntPropio(slice1(4)),
+      toIntPropio(slice1(5)),
+      toIntPropio(slice1(6)),
+      toIntPropio(slice1(7)),
+      toIntPropio(slice1(8)),
+      toIntPropio(slice1(9)),
+      toIntPropio(slice1(10)),
+      toIntPropio(slice1(11)),
       slice1(12),
-      slice1(13).toInt,
+      toIntPropio(slice1(13)),
       slice1(14),
-      slice1(15).toInt,
-      slice1(16).toInt,
-      slice1(17).toInt,
-      slice1(18).toInt,
+      toIntPropio(slice1(15)),
+      toIntPropio(slice1(16)),
+      toIntPropio(slice1(17)),
+      toIntPropio(slice1(18)),
       slice1(19),
-      slice1(20).toInt
+      toIntPropio(slice1(20))
     )
     primeraParte
   }
@@ -256,27 +274,27 @@ object leerCSV extends App {
   def procesar_segunda_parte(lista: List[String]): SegundaParte = {
     val slice2 = lista.slice(21, 42)
     val segundaParte = SegundaParte(
-      slice2(0).toInt,
+      toIntPropio(slice2(0)),
       slice2(1),
-      slice2(2).toInt,
-      slice2(3).toInt,
-      slice2(4).toInt,
+      toIntPropio(slice2(2)),
+      toIntPropio(slice2(3)),
+      toIntPropio(slice2(4)),
       slice2(5),
       slice2(6),
       slice2(7),
-      slice2(8).toFloat,
-      slice2(9).toFloat,
-      slice2(10).toFloat,
-      slice2(11).toInt,
+      toFloatPropio(slice2(8)),
+      toFloatPropio(slice2(9)),
+      toFloatPropio(slice2(10)),
+      toIntPropio(slice2(11)),
       slice2(12),
-      slice2(13).toInt,
-      slice2(14).toInt,
-      slice2(15).toInt,
-      slice2(16).toInt,
-      slice2(17).toInt,
-      slice2(18).toInt,
-      slice2(19).toInt,
-      slice2(20).toInt
+      toIntPropio(slice2(13)),
+      toIntPropio(slice2(14)),
+      toIntPropio(slice2(15)),
+      toIntPropio(slice2(16)),
+      toIntPropio(slice2(17)),
+      toIntPropio(slice2(18)),
+      toIntPropio(slice2(19)),
+      toIntPropio(slice2(20))
     )
 
     segundaParte
@@ -289,23 +307,23 @@ object leerCSV extends App {
       slice3(1),
       slice3(2),
       slice3(3),
-      slice3(4).toInt,
+      toIntPropio(slice3(4)),
       slice3(5),
       slice3(6),
       slice3(7),
-      slice3(8).toInt,
-      slice3(9).toInt,
-      slice3(10).toInt,
-      slice3(11).toInt,
+      toIntPropio(slice3(8)),
+      toIntPropio(slice3(9)),
+      toIntPropio(slice3(10)),
+      toIntPropio(slice3(11)),
       slice3(12),
       slice3(13),
       slice3(14),
       slice3(15),
-      slice3(16).toInt,
-      slice3(17).toInt,
+      toIntPropio(slice3(16)),
+      toIntPropio(slice3(17)),
       slice3(18),
-      slice3(19).toInt,
-      slice3(20).toInt,
+      toIntPropio(slice3(19)),
+      toIntPropio(slice3(20)),
       slice3(21)
     )
 
@@ -317,25 +335,25 @@ object leerCSV extends App {
     val cuarteParte = CuartaParte(
       slice4(0),
       slice4(1),
-      slice4(2).toInt,
-      slice4(3).toInt,
-      slice4(4).toFloat,
-      slice4(5).toFloat,
-      slice4(6).toInt,
-      slice4(7).toInt,
-      slice4(8).toInt,
-      slice4(9).toInt,
-      slice4(10).toInt,
-      slice4(11).toInt,
-      slice4(12).toInt,
-      slice4(13).toInt,
-      slice4(14).toInt,
-      slice4(15).toInt,
-      slice4(16).toInt,
-      slice4(17).toInt,
-      slice4(18).toInt,
-      slice4(19).toInt,
-      slice4(20).toInt,
+      toIntPropio(slice4(2)),
+      toIntPropio(slice4(3)),
+      toFloatPropio(slice4(4)),
+      toFloatPropio(slice4(5)),
+      toIntPropio(slice4(6)),
+      toIntPropio(slice4(7)),
+      toIntPropio(slice4(8)),
+      toIntPropio(slice4(9)),
+      toIntPropio(slice4(10)),
+      toIntPropio(slice4(11)),
+      toIntPropio(slice4(12)),
+      toIntPropio(slice4(13)),
+      toIntPropio(slice4(14)),
+      toIntPropio(slice4(15)),
+      toIntPropio(slice4(16)),
+      toIntPropio(slice4(17)),
+      toIntPropio(slice4(18)),
+      toIntPropio(slice4(19)),
+      toIntPropio(slice4(20)),
       slice4(21)
     )
 
@@ -345,13 +363,13 @@ object leerCSV extends App {
   def procesar_quinta_parte(lista: List[String]): QuintaParte = {
     val slice5 = lista.slice(86, 92)
     val quintaParte = QuintaParte(
-      slice5(0).toInt,
+      toIntPropio(slice5(0)),
       slice5(1).replace(" u ", "").replace(" \'"," \"").patch(0,"\'",0).concat("'") ,
-      slice5(2).toFloat,
-      slice5(3).toInt,
-      slice5(4).toFloat,
-      slice5(5).toFloat,
-      slice5(6).toFloat
+      toFloatPropio(slice5(2)),
+      toIntPropio(slice5(3)),
+      toFloatPropio(slice5(4)),
+      toFloatPropio(slice5(5)),
+      toFloatPropio(slice5(6))
     )
 
     quintaParte
@@ -555,28 +573,31 @@ object leerCSV extends App {
     """.update
 
 
-//  def cargar_db(lista: List[String]): Either[String, Unit] = {
-//    insertar(procesar_primera_parte(lista),
-//             procesar_segunda_parte(lista),
-//             procesar_tercera_parte(lista),
-//             procesar_cuarta_parte(lista),
-//             procesar_quinta_parte(lista))
-//  }
-//
-//  def iterador(lista: ReadResult[List[String]]): Either[String, String] = {
-//    println("Entre")
-//    lista match {
-//      case Right(l) => {
-//        cargar_db(l) match {
-//          case Right(l) => iterador(reader.next())
-//          case Left(k) => Left("Fallo la carga a la db")
-//        }
-//      }
-//      case Left(k) => Left("Termino el archivo")
-//    }
-//  }
-//
-//  iterador(reader.next())
-//
-//}
+  def cargar_db(lista: List[String]): Either[String, String] = {
+    insertar(procesar_primera_parte(lista),
+             procesar_segunda_parte(lista),
+             procesar_tercera_parte(lista),
+             procesar_cuarta_parte(lista),
+             procesar_quinta_parte(lista)).run.transact(conexion).unsafeRunSync match {
+               case 1 => Right("Success")
+               case _ => Left("Failed")
+             }
+
+  }
+
+  def iterador(lista: ReadResult[List[String]]): Either[String, String] = {
+    println("Entre")
+    lista match {
+      case Right(l) => {
+        cargar_db(l) match {
+          case Right(l) => iterador(reader.next())
+          case Left(k) => Left("Fallo la carga a la db")
+        }
+      }
+      case Left(k) => Left("Termino el archivo")
+    }
+  }
+
+  iterador(reader.next())
+
 }
