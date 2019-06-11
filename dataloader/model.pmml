@@ -1,0 +1,1072 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<PMML xmlns="http://www.dmg.org/PMML-4_3" xmlns:data="http://jpmml.org/jpmml-model/InlineTable" version="4.3">
+	<Header>
+		<Application name="JPMML-SparkML" version="1.5.3"/>
+		<Timestamp>2019-06-11T04:48:03Z</Timestamp>
+	</Header>
+	<DataDictionary>
+		<DataField name="mai_score" optype="continuous" dataType="integer"/>
+		<DataField name="factorcodes" optype="continuous" dataType="integer"/>
+		<DataField name="icaddress" optype="continuous" dataType="integer"/>
+		<DataField name="reasoncode" optype="continuous" dataType="integer"/>
+		<DataField name="cancelled" optype="continuous" dataType="integer"/>
+		<DataField name="pp_60" optype="continuous" dataType="integer"/>
+		<DataField name="mai_advice" optype="continuous" dataType="integer"/>
+		<DataField name="mai_reason" optype="continuous" dataType="integer"/>
+		<DataField name="mai_risk" optype="continuous" dataType="integer"/>
+		<DataField name="maibis_score" optype="continuous" dataType="integer"/>
+		<DataField name="mai_searches" optype="continuous" dataType="integer"/>
+		<DataField name="mai_last_secs" optype="continuous" dataType="integer"/>
+		<DataField name="hours_since_last_verification" optype="continuous" dataType="integer"/>
+		<DataField name="mai_negative" optype="continuous" dataType="integer"/>
+		<DataField name="mai_pulevel" optype="continuous" dataType="integer"/>
+		<DataField name="maitimehours" optype="continuous" dataType="integer"/>
+		<DataField name="online_airport_state" optype="continuous" dataType="integer"/>
+		<DataField name="online_cep_number_bond" optype="continuous" dataType="integer"/>
+		<DataField name="online_city_bond" optype="continuous" dataType="integer"/>
+		<DataField name="online_ddd" optype="continuous" dataType="integer"/>
+		<DataField name="online_ddd_bond" optype="continuous" dataType="integer"/>
+		<DataField name="online_death" optype="continuous" dataType="integer"/>
+		<DataField name="online_email" optype="continuous" dataType="integer"/>
+		<DataField name="online_name" optype="continuous" dataType="integer"/>
+		<DataField name="totalusdamounts" optype="continuous" dataType="integer"/>
+		<DataField name="apocrypha" optype="categorical" dataType="integer">
+			<Value value="0"/>
+			<Value value="1"/>
+		</DataField>
+	</DataDictionary>
+	<MiningModel functionName="classification">
+		<MiningSchema>
+			<MiningField name="apocrypha" usageType="target"/>
+			<MiningField name="mai_score"/>
+			<MiningField name="factorcodes"/>
+			<MiningField name="icaddress"/>
+			<MiningField name="reasoncode"/>
+			<MiningField name="cancelled"/>
+			<MiningField name="pp_60"/>
+			<MiningField name="mai_advice"/>
+			<MiningField name="mai_reason"/>
+			<MiningField name="mai_risk"/>
+			<MiningField name="maibis_score"/>
+			<MiningField name="mai_searches"/>
+			<MiningField name="mai_last_secs"/>
+			<MiningField name="hours_since_last_verification"/>
+			<MiningField name="mai_negative"/>
+			<MiningField name="mai_pulevel"/>
+			<MiningField name="maitimehours"/>
+			<MiningField name="online_airport_state"/>
+			<MiningField name="online_cep_number_bond"/>
+			<MiningField name="online_city_bond"/>
+			<MiningField name="online_ddd"/>
+			<MiningField name="online_ddd_bond"/>
+			<MiningField name="online_death"/>
+			<MiningField name="online_email"/>
+			<MiningField name="online_name"/>
+			<MiningField name="totalusdamounts"/>
+		</MiningSchema>
+		<Output>
+			<OutputField name="pmml(prediction)" optype="categorical" dataType="integer" feature="predictedValue" isFinalResult="false"/>
+			<OutputField name="prediction" optype="categorical" dataType="double" feature="transformedValue">
+				<MapValues outputColumn="data:output" dataType="double">
+					<FieldColumnPair field="pmml(prediction)" column="data:input"/>
+					<InlineTable>
+						<row>
+							<data:input>0</data:input>
+							<data:output>0</data:output>
+						</row>
+						<row>
+							<data:input>1</data:input>
+							<data:output>1</data:output>
+						</row>
+					</InlineTable>
+				</MapValues>
+			</OutputField>
+			<OutputField name="probability(0)" optype="continuous" dataType="double" feature="probability" value="0"/>
+			<OutputField name="probability(1)" optype="continuous" dataType="double" feature="probability" value="1"/>
+		</Output>
+		<Segmentation multipleModelMethod="average">
+			<Segment id="1">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="cancelled"/>
+						<MiningField name="mai_risk"/>
+						<MiningField name="mai_searches"/>
+						<MiningField name="mai_negative"/>
+						<MiningField name="mai_pulevel"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="mai_negative" operator="lessOrEqual" value="0.0"/>
+							<Node>
+								<SimplePredicate field="mai_searches" operator="lessOrEqual" value="2.0"/>
+								<Node score="0" recordCount="8079">
+									<SimplePredicate field="cancelled" operator="lessOrEqual" value="0.0"/>
+									<ScoreDistribution value="0" recordCount="7431.0"/>
+									<ScoreDistribution value="1" recordCount="648.0"/>
+								</Node>
+								<Node score="1" recordCount="2121">
+									<True/>
+									<ScoreDistribution value="0" recordCount="1.0"/>
+									<ScoreDistribution value="1" recordCount="2120.0"/>
+								</Node>
+							</Node>
+							<Node score="0" recordCount="18502">
+								<True/>
+								<ScoreDistribution value="0" recordCount="16515.0"/>
+								<ScoreDistribution value="1" recordCount="1987.0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="mai_risk" operator="lessOrEqual" value="1.0"/>
+							<Node score="1" recordCount="711">
+								<SimplePredicate field="mai_pulevel" operator="lessOrEqual" value="3.0"/>
+								<ScoreDistribution value="0" recordCount="105.0"/>
+								<ScoreDistribution value="1" recordCount="606.0"/>
+							</Node>
+							<Node score="0" recordCount="9">
+								<True/>
+								<ScoreDistribution value="0" recordCount="9.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node score="1" recordCount="2682">
+							<True/>
+							<ScoreDistribution value="0" recordCount="95.0"/>
+							<ScoreDistribution value="1" recordCount="2587.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="2">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="mai_score"/>
+						<MiningField name="cancelled"/>
+						<MiningField name="mai_reason"/>
+						<MiningField name="mai_risk"/>
+						<MiningField name="online_cep_number_bond"/>
+						<MiningField name="online_ddd_bond"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="mai_reason" operator="lessOrEqual" value="10.0"/>
+							<Node>
+								<SimplePredicate field="online_ddd_bond" operator="lessOrEqual" value="2.0"/>
+								<Node score="0" recordCount="6173">
+									<SimplePredicate field="mai_score" operator="lessOrEqual" value="63.0"/>
+									<ScoreDistribution value="0" recordCount="3781.0"/>
+									<ScoreDistribution value="1" recordCount="2392.0"/>
+								</Node>
+								<Node score="1" recordCount="1039">
+									<True/>
+									<ScoreDistribution value="0" recordCount="75.0"/>
+									<ScoreDistribution value="1" recordCount="964.0"/>
+								</Node>
+							</Node>
+							<Node score="0" recordCount="58">
+								<SimplePredicate field="online_cep_number_bond" operator="lessOrEqual" value="1.0"/>
+								<ScoreDistribution value="0" recordCount="37.0"/>
+								<ScoreDistribution value="1" recordCount="21.0"/>
+							</Node>
+							<Node score="1" recordCount="1567">
+								<True/>
+								<ScoreDistribution value="0" recordCount="332.0"/>
+								<ScoreDistribution value="1" recordCount="1235.0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="mai_score" operator="lessOrEqual" value="91.0"/>
+							<Node score="0" recordCount="22114">
+								<SimplePredicate field="mai_risk" operator="lessOrEqual" value="3.0"/>
+								<ScoreDistribution value="0" recordCount="19870.0"/>
+								<ScoreDistribution value="1" recordCount="2244.0"/>
+							</Node>
+							<Node score="1" recordCount="298">
+								<True/>
+								<ScoreDistribution value="0" recordCount="34.0"/>
+								<ScoreDistribution value="1" recordCount="264.0"/>
+							</Node>
+						</Node>
+						<Node score="0" recordCount="273">
+							<SimplePredicate field="cancelled" operator="lessOrEqual" value="0.0"/>
+							<ScoreDistribution value="0" recordCount="213.0"/>
+							<ScoreDistribution value="1" recordCount="60.0"/>
+						</Node>
+						<Node score="1" recordCount="692">
+							<True/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="692.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="3">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="mai_reason"/>
+						<MiningField name="mai_risk"/>
+						<MiningField name="mai_negative"/>
+						<MiningField name="online_airport_state"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="mai_risk" operator="lessOrEqual" value="2.0"/>
+							<Node score="0" recordCount="19777">
+								<SimplePredicate field="mai_negative" operator="lessOrEqual" value="0.0"/>
+								<ScoreDistribution value="0" recordCount="18246.0"/>
+								<ScoreDistribution value="1" recordCount="1531.0"/>
+							</Node>
+							<Node score="1" recordCount="937">
+								<True/>
+								<ScoreDistribution value="0" recordCount="145.0"/>
+								<ScoreDistribution value="1" recordCount="792.0"/>
+							</Node>
+						</Node>
+						<Node score="1" recordCount="1821">
+							<SimplePredicate field="mai_reason" operator="lessOrEqual" value="7.0"/>
+							<ScoreDistribution value="0" recordCount="288.0"/>
+							<ScoreDistribution value="1" recordCount="1533.0"/>
+						</Node>
+						<Node score="0" recordCount="6061">
+							<SimplePredicate field="online_airport_state" operator="lessOrEqual" value="0.0"/>
+							<ScoreDistribution value="0" recordCount="4294.0"/>
+							<ScoreDistribution value="1" recordCount="1767.0"/>
+						</Node>
+						<Node score="1" recordCount="3452">
+							<True/>
+							<ScoreDistribution value="0" recordCount="1191.0"/>
+							<ScoreDistribution value="1" recordCount="2261.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="4">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="mai_score"/>
+						<MiningField name="reasoncode"/>
+						<MiningField name="mai_risk"/>
+						<MiningField name="mai_pulevel"/>
+						<MiningField name="online_name"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="reasoncode" operator="lessOrEqual" value="165.0"/>
+							<Node score="0" recordCount="23404">
+								<SimplePredicate field="online_name" operator="lessOrEqual" value="2.0"/>
+								<ScoreDistribution value="0" recordCount="21383.0"/>
+								<ScoreDistribution value="1" recordCount="2021.0"/>
+							</Node>
+							<Node score="0" recordCount="998">
+								<SimplePredicate field="mai_risk" operator="lessOrEqual" value="2.0"/>
+								<ScoreDistribution value="0" recordCount="811.0"/>
+								<ScoreDistribution value="1" recordCount="187.0"/>
+							</Node>
+							<Node score="1" recordCount="496">
+								<True/>
+								<ScoreDistribution value="0" recordCount="232.0"/>
+								<ScoreDistribution value="1" recordCount="264.0"/>
+							</Node>
+						</Node>
+						<Node score="1" recordCount="4365">
+							<SimplePredicate field="mai_score" operator="lessOrEqual" value="43.0"/>
+							<ScoreDistribution value="0" recordCount="1547.0"/>
+							<ScoreDistribution value="1" recordCount="2818.0"/>
+						</Node>
+						<Node score="1" recordCount="3037">
+							<SimplePredicate field="mai_pulevel" operator="lessOrEqual" value="1.0"/>
+							<ScoreDistribution value="0" recordCount="299.0"/>
+							<ScoreDistribution value="1" recordCount="2738.0"/>
+						</Node>
+						<Node score="0" recordCount="110">
+							<True/>
+							<ScoreDistribution value="0" recordCount="73.0"/>
+							<ScoreDistribution value="1" recordCount="37.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="5">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="cancelled"/>
+						<MiningField name="mai_reason"/>
+						<MiningField name="mai_negative"/>
+						<MiningField name="maitimehours"/>
+						<MiningField name="online_name"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="mai_reason" operator="lessOrEqual" value="10.0"/>
+							<Node>
+								<SimplePredicate field="online_name" operator="lessOrEqual" value="1.0"/>
+								<Node score="0" recordCount="5996">
+									<SimplePredicate field="mai_negative" operator="lessOrEqual" value="0.0"/>
+									<ScoreDistribution value="0" recordCount="3915.0"/>
+									<ScoreDistribution value="1" recordCount="2081.0"/>
+								</Node>
+								<Node score="1" recordCount="1371">
+									<True/>
+									<ScoreDistribution value="0" recordCount="44.0"/>
+									<ScoreDistribution value="1" recordCount="1327.0"/>
+								</Node>
+							</Node>
+							<Node score="1" recordCount="1571">
+								<True/>
+								<ScoreDistribution value="0" recordCount="272.0"/>
+								<ScoreDistribution value="1" recordCount="1299.0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="online_name" operator="lessOrEqual" value="1.0"/>
+							<Node score="0" recordCount="19440">
+								<SimplePredicate field="cancelled" operator="lessOrEqual" value="0.0"/>
+								<ScoreDistribution value="0" recordCount="18894.0"/>
+								<ScoreDistribution value="1" recordCount="546.0"/>
+							</Node>
+							<Node score="1" recordCount="1785">
+								<True/>
+								<ScoreDistribution value="0" recordCount="9.0"/>
+								<ScoreDistribution value="1" recordCount="1776.0"/>
+							</Node>
+						</Node>
+						<Node score="1" recordCount="893">
+							<SimplePredicate field="maitimehours" operator="lessOrEqual" value="64.0"/>
+							<ScoreDistribution value="0" recordCount="272.0"/>
+							<ScoreDistribution value="1" recordCount="621.0"/>
+						</Node>
+						<Node score="0" recordCount="1421">
+							<True/>
+							<ScoreDistribution value="0" recordCount="1153.0"/>
+							<ScoreDistribution value="1" recordCount="268.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="6">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="cancelled"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="0" recordCount="25482">
+							<SimplePredicate field="cancelled" operator="lessOrEqual" value="0.0"/>
+							<ScoreDistribution value="0" recordCount="24170.0"/>
+							<ScoreDistribution value="1" recordCount="1312.0"/>
+						</Node>
+						<Node score="1" recordCount="6547">
+							<True/>
+							<ScoreDistribution value="0" recordCount="6.0"/>
+							<ScoreDistribution value="1" recordCount="6541.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="7">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="mai_score"/>
+						<MiningField name="cancelled"/>
+						<MiningField name="maibis_score"/>
+						<MiningField name="hours_since_last_verification"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="hours_since_last_verification" operator="lessOrEqual" value="3071.0"/>
+							<Node score="0" recordCount="7655">
+								<SimplePredicate field="cancelled" operator="lessOrEqual" value="0.0"/>
+								<ScoreDistribution value="0" recordCount="6980.0"/>
+								<ScoreDistribution value="1" recordCount="675.0"/>
+							</Node>
+							<Node score="1" recordCount="4004">
+								<True/>
+								<ScoreDistribution value="0" recordCount="2.0"/>
+								<ScoreDistribution value="1" recordCount="4002.0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="maibis_score" operator="lessOrEqual" value="533.0"/>
+							<Node score="0" recordCount="18394">
+								<SimplePredicate field="mai_score" operator="lessOrEqual" value="91.0"/>
+								<ScoreDistribution value="0" recordCount="16666.0"/>
+								<ScoreDistribution value="1" recordCount="1728.0"/>
+							</Node>
+							<Node score="1" recordCount="531">
+								<True/>
+								<ScoreDistribution value="0" recordCount="163.0"/>
+								<ScoreDistribution value="1" recordCount="368.0"/>
+							</Node>
+						</Node>
+						<Node score="1" recordCount="1319">
+							<True/>
+							<ScoreDistribution value="0" recordCount="242.0"/>
+							<ScoreDistribution value="1" recordCount="1077.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="8">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="mai_score"/>
+						<MiningField name="reasoncode"/>
+						<MiningField name="mai_risk"/>
+						<MiningField name="mai_negative"/>
+						<MiningField name="online_airport_state"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="reasoncode" operator="lessOrEqual" value="165.0"/>
+							<Node score="0" recordCount="18610">
+								<SimplePredicate field="online_airport_state" operator="lessOrEqual" value="0.0"/>
+								<ScoreDistribution value="0" recordCount="17369.0"/>
+								<ScoreDistribution value="1" recordCount="1241.0"/>
+							</Node>
+							<Node score="0" recordCount="5804">
+								<SimplePredicate field="mai_negative" operator="lessOrEqual" value="0.0"/>
+								<ScoreDistribution value="0" recordCount="4947.0"/>
+								<ScoreDistribution value="1" recordCount="857.0"/>
+							</Node>
+							<Node score="1" recordCount="447">
+								<True/>
+								<ScoreDistribution value="0" recordCount="50.0"/>
+								<ScoreDistribution value="1" recordCount="397.0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="mai_risk" operator="lessOrEqual" value="2.0"/>
+							<Node score="0" recordCount="1148">
+								<SimplePredicate field="mai_score" operator="lessOrEqual" value="35.0"/>
+								<ScoreDistribution value="0" recordCount="765.0"/>
+								<ScoreDistribution value="1" recordCount="383.0"/>
+							</Node>
+							<Node score="1" recordCount="1198">
+								<True/>
+								<ScoreDistribution value="0" recordCount="401.0"/>
+								<ScoreDistribution value="1" recordCount="797.0"/>
+							</Node>
+						</Node>
+						<Node score="1" recordCount="5044">
+							<True/>
+							<ScoreDistribution value="0" recordCount="633.0"/>
+							<ScoreDistribution value="1" recordCount="4411.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="9">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="mai_reason"/>
+						<MiningField name="maibis_score"/>
+						<MiningField name="mai_negative"/>
+						<MiningField name="online_airport_state"/>
+						<MiningField name="online_email"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="online_airport_state" operator="lessOrEqual" value="0.0"/>
+							<Node score="0" recordCount="6346">
+								<SimplePredicate field="online_email" operator="lessOrEqual" value="1.0"/>
+								<ScoreDistribution value="0" recordCount="4699.0"/>
+								<ScoreDistribution value="1" recordCount="1647.0"/>
+							</Node>
+							<Node score="0" recordCount="14990">
+								<SimplePredicate field="maibis_score" operator="lessOrEqual" value="623.0"/>
+								<ScoreDistribution value="0" recordCount="13825.0"/>
+								<ScoreDistribution value="1" recordCount="1165.0"/>
+							</Node>
+							<Node score="1" recordCount="653">
+								<True/>
+								<ScoreDistribution value="0" recordCount="207.0"/>
+								<ScoreDistribution value="1" recordCount="446.0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="mai_negative" operator="lessOrEqual" value="0.0"/>
+							<Node score="1" recordCount="2477">
+								<SimplePredicate field="mai_reason" operator="lessOrEqual" value="10.0"/>
+								<ScoreDistribution value="0" recordCount="864.0"/>
+								<ScoreDistribution value="1" recordCount="1613.0"/>
+							</Node>
+							<Node score="0" recordCount="5695">
+								<True/>
+								<ScoreDistribution value="0" recordCount="4488.0"/>
+								<ScoreDistribution value="1" recordCount="1207.0"/>
+							</Node>
+						</Node>
+						<Node score="1" recordCount="1844">
+							<True/>
+							<ScoreDistribution value="0" recordCount="49.0"/>
+							<ScoreDistribution value="1" recordCount="1795.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="10">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="mai_score"/>
+						<MiningField name="cancelled"/>
+						<MiningField name="mai_reason"/>
+						<MiningField name="maitimehours"/>
+						<MiningField name="online_death"/>
+						<MiningField name="online_name"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="online_name" operator="lessOrEqual" value="1.0"/>
+							<Node>
+								<SimplePredicate field="maitimehours" operator="lessOrEqual" value="64.0"/>
+								<Node score="1" recordCount="714">
+									<SimplePredicate field="online_death" operator="lessOrEqual" value="0.0"/>
+									<ScoreDistribution value="0" recordCount="141.0"/>
+									<ScoreDistribution value="1" recordCount="573.0"/>
+								</Node>
+								<Node score="0" recordCount="5633">
+									<True/>
+									<ScoreDistribution value="0" recordCount="2897.0"/>
+									<ScoreDistribution value="1" recordCount="2736.0"/>
+								</Node>
+							</Node>
+							<Node score="0" recordCount="20254">
+								<SimplePredicate field="cancelled" operator="lessOrEqual" value="0.0"/>
+								<ScoreDistribution value="0" recordCount="19875.0"/>
+								<ScoreDistribution value="1" recordCount="379.0"/>
+							</Node>
+							<Node score="1" recordCount="2140">
+								<True/>
+								<ScoreDistribution value="0" recordCount="5.0"/>
+								<ScoreDistribution value="1" recordCount="2135.0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="mai_score" operator="lessOrEqual" value="91.0"/>
+							<Node score="1" recordCount="1137">
+								<SimplePredicate field="mai_reason" operator="lessOrEqual" value="10.0"/>
+								<ScoreDistribution value="0" recordCount="279.0"/>
+								<ScoreDistribution value="1" recordCount="858.0"/>
+							</Node>
+							<Node score="0" recordCount="2120">
+								<True/>
+								<ScoreDistribution value="0" recordCount="1408.0"/>
+								<ScoreDistribution value="1" recordCount="712.0"/>
+							</Node>
+						</Node>
+						<Node score="1" recordCount="620">
+							<True/>
+							<ScoreDistribution value="0" recordCount="23.0"/>
+							<ScoreDistribution value="1" recordCount="597.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="11">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="icaddress"/>
+						<MiningField name="cancelled"/>
+						<MiningField name="maitimehours"/>
+						<MiningField name="online_airport_state"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="maitimehours" operator="lessOrEqual" value="84.0"/>
+							<Node>
+								<SimplePredicate field="cancelled" operator="lessOrEqual" value="0.0"/>
+								<Node score="0" recordCount="4635">
+									<SimplePredicate field="icaddress" operator="lessOrEqual" value="2.0"/>
+									<ScoreDistribution value="0" recordCount="3879.0"/>
+									<ScoreDistribution value="1" recordCount="756.0"/>
+								</Node>
+								<Node score="1" recordCount="117">
+									<True/>
+									<ScoreDistribution value="0" recordCount="28.0"/>
+									<ScoreDistribution value="1" recordCount="89.0"/>
+								</Node>
+							</Node>
+							<Node score="1" recordCount="4228">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="4228.0"/>
+							</Node>
+						</Node>
+						<Node score="0" recordCount="17094">
+							<SimplePredicate field="online_airport_state" operator="lessOrEqual" value="0.0"/>
+							<ScoreDistribution value="0" recordCount="15688.0"/>
+							<ScoreDistribution value="1" recordCount="1406.0"/>
+						</Node>
+						<Node score="0" recordCount="4776">
+							<SimplePredicate field="cancelled" operator="lessOrEqual" value="0.0"/>
+							<ScoreDistribution value="0" recordCount="4599.0"/>
+							<ScoreDistribution value="1" recordCount="177.0"/>
+						</Node>
+						<Node score="1" recordCount="1253">
+							<True/>
+							<ScoreDistribution value="0" recordCount="1.0"/>
+							<ScoreDistribution value="1" recordCount="1252.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="12">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="cancelled"/>
+						<MiningField name="mai_negative"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="mai_negative" operator="lessOrEqual" value="0.0"/>
+							<Node score="0" recordCount="24894">
+								<SimplePredicate field="cancelled" operator="lessOrEqual" value="0.0"/>
+								<ScoreDistribution value="0" recordCount="23858.0"/>
+								<ScoreDistribution value="1" recordCount="1036.0"/>
+							</Node>
+							<Node score="1" recordCount="3747">
+								<True/>
+								<ScoreDistribution value="0" recordCount="1.0"/>
+								<ScoreDistribution value="1" recordCount="3746.0"/>
+							</Node>
+						</Node>
+						<Node score="1" recordCount="3433">
+							<True/>
+							<ScoreDistribution value="0" recordCount="224.0"/>
+							<ScoreDistribution value="1" recordCount="3209.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="13">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="mai_advice"/>
+						<MiningField name="maibis_score"/>
+						<MiningField name="mai_negative"/>
+						<MiningField name="maitimehours"/>
+						<MiningField name="online_name"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="mai_advice" operator="lessOrEqual" value="2.0"/>
+							<Node>
+								<SimplePredicate field="mai_negative" operator="lessOrEqual" value="0.0"/>
+								<Node score="1" recordCount="400">
+									<SimplePredicate field="maitimehours" operator="lessOrEqual" value="131.0"/>
+									<ScoreDistribution value="0" recordCount="52.0"/>
+									<ScoreDistribution value="1" recordCount="348.0"/>
+								</Node>
+								<Node score="0" recordCount="294">
+									<True/>
+									<ScoreDistribution value="0" recordCount="181.0"/>
+									<ScoreDistribution value="1" recordCount="113.0"/>
+								</Node>
+							</Node>
+							<Node score="1" recordCount="1044">
+								<True/>
+								<ScoreDistribution value="0" recordCount="20.0"/>
+								<ScoreDistribution value="1" recordCount="1024.0"/>
+							</Node>
+						</Node>
+						<Node score="0" recordCount="27219">
+							<SimplePredicate field="online_name" operator="lessOrEqual" value="1.0"/>
+							<ScoreDistribution value="0" recordCount="22523.0"/>
+							<ScoreDistribution value="1" recordCount="4696.0"/>
+						</Node>
+						<Node score="0" recordCount="2120">
+							<SimplePredicate field="maibis_score" operator="lessOrEqual" value="499.0"/>
+							<ScoreDistribution value="0" recordCount="1363.0"/>
+							<ScoreDistribution value="1" recordCount="757.0"/>
+						</Node>
+						<Node score="1" recordCount="1383">
+							<True/>
+							<ScoreDistribution value="0" recordCount="329.0"/>
+							<ScoreDistribution value="1" recordCount="1054.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="14">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="mai_advice"/>
+						<MiningField name="mai_risk"/>
+						<MiningField name="mai_last_secs"/>
+						<MiningField name="mai_negative"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="mai_negative" operator="lessOrEqual" value="0.0"/>
+							<Node>
+								<SimplePredicate field="mai_advice" operator="lessOrEqual" value="3.0"/>
+								<Node score="0" recordCount="19826">
+									<SimplePredicate field="mai_risk" operator="lessOrEqual" value="2.0"/>
+									<ScoreDistribution value="0" recordCount="18214.0"/>
+									<ScoreDistribution value="1" recordCount="1612.0"/>
+								</Node>
+								<Node score="1" recordCount="694">
+									<True/>
+									<ScoreDistribution value="0" recordCount="243.0"/>
+									<ScoreDistribution value="1" recordCount="451.0"/>
+								</Node>
+							</Node>
+							<Node score="1" recordCount="1978">
+								<SimplePredicate field="mai_last_secs" operator="lessOrEqual" value="467.0"/>
+								<ScoreDistribution value="0" recordCount="908.0"/>
+								<ScoreDistribution value="1" recordCount="1070.0"/>
+							</Node>
+							<Node score="0" recordCount="6345">
+								<True/>
+								<ScoreDistribution value="0" recordCount="4682.0"/>
+								<ScoreDistribution value="1" recordCount="1663.0"/>
+							</Node>
+						</Node>
+						<Node score="1" recordCount="3313">
+							<True/>
+							<ScoreDistribution value="0" recordCount="184.0"/>
+							<ScoreDistribution value="1" recordCount="3129.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="15">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="cancelled"/>
+						<MiningField name="mai_negative"/>
+						<MiningField name="maitimehours"/>
+						<MiningField name="online_ddd"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="online_ddd" operator="lessOrEqual" value="0.0"/>
+							<Node>
+								<SimplePredicate field="mai_negative" operator="lessOrEqual" value="0.0"/>
+								<Node score="0" recordCount="19422">
+									<SimplePredicate field="cancelled" operator="lessOrEqual" value="0.0"/>
+									<ScoreDistribution value="0" recordCount="18807.0"/>
+									<ScoreDistribution value="1" recordCount="615.0"/>
+								</Node>
+								<Node score="1" recordCount="1835">
+									<True/>
+									<ScoreDistribution value="0" recordCount="4.0"/>
+									<ScoreDistribution value="1" recordCount="1831.0"/>
+								</Node>
+							</Node>
+							<Node score="1" recordCount="1683">
+								<True/>
+								<ScoreDistribution value="0" recordCount="158.0"/>
+								<ScoreDistribution value="1" recordCount="1525.0"/>
+							</Node>
+						</Node>
+						<Node score="1" recordCount="3532">
+							<SimplePredicate field="maitimehours" operator="lessOrEqual" value="84.0"/>
+							<ScoreDistribution value="0" recordCount="930.0"/>
+							<ScoreDistribution value="1" recordCount="2602.0"/>
+						</Node>
+						<Node score="0" recordCount="5707">
+							<True/>
+							<ScoreDistribution value="0" recordCount="4405.0"/>
+							<ScoreDistribution value="1" recordCount="1302.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="16">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="mai_reason"/>
+						<MiningField name="maibis_score"/>
+						<MiningField name="mai_negative"/>
+						<MiningField name="online_name"/>
+						<MiningField name="totalusdamounts"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="mai_reason" operator="lessOrEqual" value="10.0"/>
+							<Node>
+								<SimplePredicate field="mai_negative" operator="lessOrEqual" value="0.0"/>
+								<Node score="0" recordCount="2940">
+									<SimplePredicate field="totalusdamounts" operator="lessOrEqual" value="218.0"/>
+									<ScoreDistribution value="0" recordCount="2221.0"/>
+									<ScoreDistribution value="1" recordCount="719.0"/>
+								</Node>
+								<Node score="1" recordCount="4071">
+									<True/>
+									<ScoreDistribution value="0" recordCount="1943.0"/>
+									<ScoreDistribution value="1" recordCount="2128.0"/>
+								</Node>
+							</Node>
+							<Node score="1" recordCount="2032">
+								<True/>
+								<ScoreDistribution value="0" recordCount="53.0"/>
+								<ScoreDistribution value="1" recordCount="1979.0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="maibis_score" operator="lessOrEqual" value="501.0"/>
+							<Node score="0" recordCount="22666">
+								<SimplePredicate field="online_name" operator="lessOrEqual" value="4.0"/>
+								<ScoreDistribution value="0" recordCount="20156.0"/>
+								<ScoreDistribution value="1" recordCount="2510.0"/>
+							</Node>
+							<Node score="1" recordCount="222">
+								<True/>
+								<ScoreDistribution value="0" recordCount="31.0"/>
+								<ScoreDistribution value="1" recordCount="191.0"/>
+							</Node>
+						</Node>
+						<Node score="1" recordCount="506">
+							<True/>
+							<ScoreDistribution value="0" recordCount="38.0"/>
+							<ScoreDistribution value="1" recordCount="468.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="17">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="mai_reason"/>
+						<MiningField name="maibis_score"/>
+						<MiningField name="hours_since_last_verification"/>
+						<MiningField name="mai_negative"/>
+						<MiningField name="maitimehours"/>
+						<MiningField name="online_city_bond"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="hours_since_last_verification" operator="lessOrEqual" value="3071.0"/>
+							<Node>
+								<SimplePredicate field="maitimehours" operator="lessOrEqual" value="131.0"/>
+								<Node score="0" recordCount="1038">
+									<SimplePredicate field="maibis_score" operator="lessOrEqual" value="499.0"/>
+									<ScoreDistribution value="0" recordCount="695.0"/>
+									<ScoreDistribution value="1" recordCount="343.0"/>
+								</Node>
+								<Node score="1" recordCount="4243">
+									<True/>
+									<ScoreDistribution value="0" recordCount="996.0"/>
+									<ScoreDistribution value="1" recordCount="3247.0"/>
+								</Node>
+							</Node>
+							<Node score="0" recordCount="6221">
+								<SimplePredicate field="mai_negative" operator="lessOrEqual" value="0.0"/>
+								<ScoreDistribution value="0" recordCount="5474.0"/>
+								<ScoreDistribution value="1" recordCount="747.0"/>
+							</Node>
+							<Node score="1" recordCount="459">
+								<True/>
+								<ScoreDistribution value="0" recordCount="39.0"/>
+								<ScoreDistribution value="1" recordCount="420.0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="online_city_bond" operator="lessOrEqual" value="2.0"/>
+							<Node score="1" recordCount="768">
+								<SimplePredicate field="mai_reason" operator="lessOrEqual" value="1.0"/>
+								<ScoreDistribution value="0" recordCount="164.0"/>
+								<ScoreDistribution value="1" recordCount="604.0"/>
+							</Node>
+							<Node score="0" recordCount="17018">
+								<True/>
+								<ScoreDistribution value="0" recordCount="15368.0"/>
+								<ScoreDistribution value="1" recordCount="1650.0"/>
+							</Node>
+						</Node>
+						<Node score="1" recordCount="251">
+							<SimplePredicate field="mai_reason" operator="lessOrEqual" value="7.0"/>
+							<ScoreDistribution value="0" recordCount="17.0"/>
+							<ScoreDistribution value="1" recordCount="234.0"/>
+						</Node>
+						<Node score="0" recordCount="2390">
+							<True/>
+							<ScoreDistribution value="0" recordCount="1802.0"/>
+							<ScoreDistribution value="1" recordCount="588.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="18">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="mai_advice"/>
+						<MiningField name="mai_reason"/>
+						<MiningField name="online_ddd"/>
+						<MiningField name="totalusdamounts"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="online_ddd" operator="lessOrEqual" value="0.0"/>
+							<Node score="1" recordCount="934">
+								<SimplePredicate field="mai_advice" operator="lessOrEqual" value="2.0"/>
+								<ScoreDistribution value="0" recordCount="204.0"/>
+								<ScoreDistribution value="1" recordCount="730.0"/>
+							</Node>
+							<Node score="0" recordCount="21842">
+								<True/>
+								<ScoreDistribution value="0" recordCount="18653.0"/>
+								<ScoreDistribution value="1" recordCount="3189.0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="totalusdamounts" operator="lessOrEqual" value="233.0"/>
+							<Node score="1" recordCount="1462">
+								<SimplePredicate field="mai_reason" operator="lessOrEqual" value="10.0"/>
+								<ScoreDistribution value="0" recordCount="682.0"/>
+								<ScoreDistribution value="1" recordCount="780.0"/>
+							</Node>
+							<Node score="0" recordCount="2923">
+								<True/>
+								<ScoreDistribution value="0" recordCount="2482.0"/>
+								<ScoreDistribution value="1" recordCount="441.0"/>
+							</Node>
+						</Node>
+						<Node score="0" recordCount="2881">
+							<SimplePredicate field="mai_advice" operator="lessOrEqual" value="3.0"/>
+							<ScoreDistribution value="0" recordCount="1727.0"/>
+							<ScoreDistribution value="1" recordCount="1154.0"/>
+						</Node>
+						<Node score="1" recordCount="2172">
+							<True/>
+							<ScoreDistribution value="0" recordCount="515.0"/>
+							<ScoreDistribution value="1" recordCount="1657.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="19">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="pp_60"/>
+						<MiningField name="mai_risk"/>
+						<MiningField name="maibis_score"/>
+						<MiningField name="online_airport_state"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="online_airport_state" operator="lessOrEqual" value="0.0"/>
+							<Node score="0" recordCount="21752">
+								<SimplePredicate field="pp_60" operator="lessOrEqual" value="2.0"/>
+								<ScoreDistribution value="0" recordCount="18657.0"/>
+								<ScoreDistribution value="1" recordCount="3095.0"/>
+							</Node>
+							<Node score="0" recordCount="346">
+								<SimplePredicate field="maibis_score" operator="lessOrEqual" value="499.0"/>
+								<ScoreDistribution value="0" recordCount="270.0"/>
+								<ScoreDistribution value="1" recordCount="76.0"/>
+							</Node>
+							<Node score="1" recordCount="220">
+								<True/>
+								<ScoreDistribution value="0" recordCount="32.0"/>
+								<ScoreDistribution value="1" recordCount="188.0"/>
+							</Node>
+						</Node>
+						<Node score="0" recordCount="5591">
+							<SimplePredicate field="mai_risk" operator="lessOrEqual" value="2.0"/>
+							<ScoreDistribution value="0" recordCount="4112.0"/>
+							<ScoreDistribution value="1" recordCount="1479.0"/>
+						</Node>
+						<Node score="1" recordCount="4592">
+							<True/>
+							<ScoreDistribution value="0" recordCount="1302.0"/>
+							<ScoreDistribution value="1" recordCount="3290.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="20">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="factorcodes"/>
+						<MiningField name="cancelled"/>
+						<MiningField name="mai_advice"/>
+						<MiningField name="mai_negative"/>
+						<MiningField name="maitimehours"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="mai_advice" operator="lessOrEqual" value="2.0"/>
+							<Node>
+								<SimplePredicate field="cancelled" operator="lessOrEqual" value="0.0"/>
+								<Node score="0" recordCount="270">
+									<SimplePredicate field="factorcodes" operator="lessOrEqual" value="14.0"/>
+									<ScoreDistribution value="0" recordCount="222.0"/>
+									<ScoreDistribution value="1" recordCount="48.0"/>
+								</Node>
+								<Node score="1" recordCount="51">
+									<True/>
+									<ScoreDistribution value="0" recordCount="16.0"/>
+									<ScoreDistribution value="1" recordCount="35.0"/>
+								</Node>
+							</Node>
+							<Node score="1" recordCount="1443">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="1443.0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="maitimehours" operator="lessOrEqual" value="84.0"/>
+							<Node score="0" recordCount="6722">
+								<SimplePredicate field="mai_negative" operator="lessOrEqual" value="0.0"/>
+								<ScoreDistribution value="0" recordCount="3864.0"/>
+								<ScoreDistribution value="1" recordCount="2858.0"/>
+							</Node>
+							<Node score="1" recordCount="1305">
+								<True/>
+								<ScoreDistribution value="0" recordCount="30.0"/>
+								<ScoreDistribution value="1" recordCount="1275.0"/>
+							</Node>
+						</Node>
+						<Node score="0" recordCount="22775">
+							<True/>
+							<ScoreDistribution value="0" recordCount="20465.0"/>
+							<ScoreDistribution value="1" recordCount="2310.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+		</Segmentation>
+	</MiningModel>
+</PMML>

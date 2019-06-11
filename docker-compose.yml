@@ -6,3 +6,9 @@ services:
       POSTGRES_USER: "funcional"
     ports:
       - "5432:5432"
+  etl:
+    image: "dataloader:0.1"
+    environment:
+      DB_HOST: database
+    links:
+      - "db:database"
