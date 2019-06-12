@@ -41,9 +41,8 @@ object Predict {
 
       getFromDB(dataL(23)) match {
         case Right(dato) => Predict.Apocrypha(dato)
-        case Left(f) => predictFromModel(dataL)
+        case Left(f) => Predict.Apocrypha(predictFromModel(dataL))
       }
-
     }
   }
 }

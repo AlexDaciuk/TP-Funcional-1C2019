@@ -24,10 +24,9 @@ object SqlStuff {
     select apocrypha from data where correl_id = $correl_id
     """.query[Int]
 
-    query.stream.compile.toList.transact(conexion).unsafeRunSync match {
-      case apocrypha :: Nil => Right(apocrypha)
-      case Nil => Left("No existe ese registro en la db")
-      case _ => Left("Esto no deberia pasar")
+    Try(query.stream.compile.unique.transact(conexion).unsafeRunSync) match {
+      case Success(apocrypha) => Right(apocrypha)
+      case Failure => Left("No existe ese registro en la db")
     }
   }
 }
