@@ -1,3 +1,4 @@
+import com.typesafe.sbt.packager.docker._
 lazy val SparkVersion = "2.4.3"
 lazy val FramelessVersion = "0.6.1"
 

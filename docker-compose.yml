@@ -12,3 +12,7 @@ services:
       DB_HOST: database
     links:
       - "db:database"
+    volumes:
+      - ./shared_files:/opt/docker/output
+
+

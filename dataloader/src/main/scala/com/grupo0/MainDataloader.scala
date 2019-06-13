@@ -118,9 +118,8 @@ object MainDataloader extends App  {
 
   // Tell spark which driver to use
   val driver: String = "org.postgresql.Driver"
-  val dbHost: String = scala.util.Properties.envOrElse("DB_HOST", "localhost" )
-  println(dbHost)
-
+  val dbHost: String = scala.util.Properties.envOrElse("DB_HOST", "localhost")
+ 
   // Load the class
   Class.forName(driver)
 
@@ -199,7 +198,7 @@ object MainDataloader extends App  {
 
   val pip: Pipeline = new Pipeline().setStages(Array(vectorAssembler, classifier))
   val pipelineModel: PipelineModel = pip.fit(training)
-  val FILE_NAME: String = "model.pmml"
+  val FILE_NAME: String = "output/model.pmml"
   val pmml = new PMMLBuilder(training.schema, pipelineModel).buildFile(new File(FILE_NAME))
 
   // Closing
