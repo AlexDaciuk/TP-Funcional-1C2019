@@ -15,9 +15,9 @@ import org.apache.spark.ml.classification.RandomForestClassifier
 import org.apache.spark.sql.DataFrame
 // import spark.implicits._
 
-object MainDataloader extends App  {
+object MainETL extends App  {
   val conf: SparkConf = new SparkConf().setMaster("local[*]").setAppName("frameless-first-example").set("spark.ui.enabled", "false")
-  implicit val spark: SparkSession = SparkSession.builder().config(conf).appName("dataloader").getOrCreate()
+  implicit val spark: SparkSession = SparkSession.builder().config(conf).appName("etl").getOrCreate()
 
   val schema: StructType = new StructType(Array(
     StructField("mai_score", IntegerType, false),

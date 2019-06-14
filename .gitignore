@@ -3,3 +3,4 @@
 project/
 target/
 .metals/
+shared_files/*.pmml

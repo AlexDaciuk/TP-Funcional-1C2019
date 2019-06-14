@@ -12,7 +12,7 @@ enablePlugins(DockerPlugin)
 
 lazy val root = project.in(file(".")).
   settings(
-    name := "dataloader",
+    name := "etl",
     organization := "com.grupo0",
     scalaVersion := "2.11.12",
     version := "0.1",
@@ -35,7 +35,7 @@ lazy val root = project.in(file(".")).
         |import frameless.syntax._
         |
         |val conf = new SparkConf().setMaster("local[*]").setAppName("frameless-repl").set("spark.ui.enabled", "false")
-        |implicit val spark = SparkSession.builder().config(conf).appName("dataloader").getOrCreate()
+        |implicit val spark = SparkSession.builder().config(conf).appName("etl").getOrCreate()
         |
         |import spark.implicits._
         |
@@ -51,5 +51,5 @@ lazy val root = project.in(file(".")).
 
   fork := true
 
-  mainClass in Compile := Some("com.grupo0.MainDataloader")
+  mainClass in Compile := Some("com.grupo0.MainETL")
   dockerBaseImage := "openjdk:8"
