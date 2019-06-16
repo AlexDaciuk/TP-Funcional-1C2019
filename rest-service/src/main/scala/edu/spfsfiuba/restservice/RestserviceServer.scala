@@ -1,4 +1,4 @@
-package edu.fiubafuncional.restservice
+package edu.spfsfiuba.restservice
 
 import cats.effect.{ConcurrentEffect, Effect, ExitCode, IO, IOApp, Timer, ContextShift}
 import cats.implicits._
@@ -14,19 +14,14 @@ object RestserviceServer {
   def stream[F[_]: ConcurrentEffect](implicit T: Timer[F], C: ContextShift[F]): Stream[F, Nothing] = {
     for {
       client <- BlazeClientBuilder[F](global).stream
-      helloWorldAlg = HelloWorld.impl[F]
-      jokeAlg = Jokes.impl[F](client)
       predictAlg = Predict.impl[F]
-
 
       // Combine Service Routes into an HttpApp.
       // Can also be done via a Router if you
       // want to extract a segments not checked
       // in the underlying routes.
       httpApp = (
-        RestserviceRoutes.helloWorldRoutes[F](helloWorldAlg) <+>
-        RestserviceRoutes.jokeRoutes[F](jokeAlg) <+>
-        RestserviceRoutes.predict[F](predictAlg)
+        RestserviceRoutes.predictRoutes[F](predictAlg)
       ).orNotFound
 
       // With Middlewares in place

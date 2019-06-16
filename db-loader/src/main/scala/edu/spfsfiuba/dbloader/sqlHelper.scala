@@ -5,12 +5,13 @@ import doobie.util.ExecutionContexts
 import cats._
 import cats.data._
 import cats.effect._
+import scala.util.{Try, Success, Failure}
 
 object SqlHelper {
   // Me conecto a la db  var crearIndiceCorrelId = sql"""
   implicit val cs = IO.contextShift(ExecutionContexts.synchronous)
   val dbHost: String = scala.util.Properties.envOrElse("DB_HOST", "localhost")
-  
+
   val conexion = Transactor.fromDriverManager[IO](
     "org.postgresql.Driver", // driver classname
     s"jdbc:postgresql://${dbHost}:5432/funcional", // connect URL (driver-specific)
@@ -582,4 +583,13 @@ object SqlHelper {
              }
   }
 
+  def getApocryphaFromDB(correl_id : Int) : Either[String, Int] = {
+  Try(sql"""
+  select apocrypha from data where correl_id = $correl_id
+  """.query[Int].unique.transact(conexion).unsafeRunSync) match {
+    case Success(apocrypha) => Right(apocrypha)
+    case Failure(f) => Left("No existe ese registro en la db")
+    }
+
+  }
 }

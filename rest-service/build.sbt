@@ -8,6 +8,7 @@ enablePlugins(JavaAppPackaging)
 enablePlugins(DockerPlugin)
 
 lazy val root = (project in file("."))
+  .dependsOn(dbLoader)
   .settings(
     organization := "edu.spfsfiuba",
     name := "rest-service",
@@ -41,6 +42,8 @@ scalacOptions ++= Seq(
   "-Ypartial-unification",
   "-Xfatal-warnings",
 )
+
+lazy val dbLoader = ProjectRef(file("../db-loader"), "root")
 
 mainClass in Compile := Some("edu.spfsfiuba.restservice.Main")
 dockerBaseImage := "openjdk:8"
