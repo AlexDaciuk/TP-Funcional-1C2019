@@ -6,13 +6,13 @@ services:
       POSTGRES_USER: "funcional"
     ports:
       - "5432:5432"
-  db-loader:
-    image: "db-loader:0.1"
+  etl:
+    image: "etl:0.1"
     environment:
       DB_HOST: database
     links:
       - "db:database"
+    volumes:
+      - ./shared_files:/opt/docker/output
     depends_on:
       - db
-    volumes:
-      - ./assets:/opt/docker/input

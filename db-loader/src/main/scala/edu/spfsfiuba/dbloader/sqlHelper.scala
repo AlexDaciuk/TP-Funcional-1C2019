@@ -1,4 +1,4 @@
-package edu.spsfiuba.dbloader.SqlHelper
+package edu.spfsfiuba.dbloader
 import doobie._
 import doobie.implicits._
 import doobie.util.ExecutionContexts
@@ -9,10 +9,11 @@ import cats.effect._
 object SqlHelper {
   // Me conecto a la db  var crearIndiceCorrelId = sql"""
   implicit val cs = IO.contextShift(ExecutionContexts.synchronous)
-
+  val dbHost: String = scala.util.Properties.envOrElse("DB_HOST", "localhost")
+  
   val conexion = Transactor.fromDriverManager[IO](
     "org.postgresql.Driver", // driver classname
-    "jdbc:postgresql:funcional", // connect URL (driver-specific)
+    s"jdbc:postgresql://${dbHost}:5432/funcional", // connect URL (driver-specific)
     "funcional", // user
     "", // password
     ExecutionContexts.synchronous // just for testing

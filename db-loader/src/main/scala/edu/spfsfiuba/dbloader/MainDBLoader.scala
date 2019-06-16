@@ -1,4 +1,4 @@
-package edu.spsfiuba.dbloader.LeerCSV
+package edu.spfsfiuba.dbloader
 
 import java.io.File
 import doobie._
@@ -11,7 +11,6 @@ import kantan.csv._ // All kantan.csv types.
 import kantan.csv.ops._ // Enriches types with useful methods.
 import kantan.codecs.resource.ResourceIterator
 import fs2.Stream
-import edu.spsfiuba.dbloader.SqlHelper._
 
 object MainDBLoader extends App {
   // Abro el archivo y apunto un csvReader a ese archivo
