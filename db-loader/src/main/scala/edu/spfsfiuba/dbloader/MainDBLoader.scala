@@ -14,7 +14,7 @@ import fs2.Stream
 
 object MainDBLoader extends App {
   // Abro el archivo y apunto un csvReader a ese archivo
-  val data = new File("../assets/csv/train.csv")
+  val data = new File("input/csv/train.csv")
   val reader = data.asCsvReader[List[String]](rfc.withHeader)
 
   def iterador(lista: ReadResult[List[String]]): Either[String, String] = {

@@ -1,12 +1,11 @@
 #!/usr/bin/bash
-
-# crear la db
-docker-compose up -d db
-
-# Alimentar la db con el csv (puede tardar bastante)
+# Creo la imagen de docker de db-loader
 cd db-loader
 sbt compile
-sbt run
+sbt docker:publishLocal
+
+# Levanto los containers, cuando se levanta db-loader, empieza la carga de la db
+docker-compose up db-loader
 
 # compilar el proyecto del etl y generar la imagen de docker
 cd ../etl
@@ -16,4 +15,4 @@ sbt docker:publishLocal
 # Volver a la raíz y levantar el container del ETL
 cd ..
 chmod 777 shared_files # asegurarse de que se puede generar archivos dentro del directorio con el user de docker
-docker-compose up -d 
+docker-compose up -d
