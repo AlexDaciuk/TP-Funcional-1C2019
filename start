@@ -15,4 +15,4 @@ sbt docker:publishLocal
 # Volver a la raíz y levantar el container del ETL
 cd ..
 chmod 777 shared_files # asegurarse de que se puede generar archivos dentro del directorio con el user de docker
-docker-compose up -d
+docker-compose -f docker-compose-etl.yml up etl
