@@ -47,4 +47,3 @@ lazy val dbLoader = ProjectRef(file("../db-loader"), "root")
 
 mainClass in Compile := Some("edu.spfsfiuba.restservice.Main")
 dockerBaseImage := "openjdk:8"
-
