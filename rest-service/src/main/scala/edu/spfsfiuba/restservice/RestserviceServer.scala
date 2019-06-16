@@ -1,4 +1,4 @@
-package edu.fiubafuncional.restservice
+package edu.spfsfiuba.restservice
 
 import cats.effect.{ConcurrentEffect, Effect, ExitCode, IO, IOApp, Timer, ContextShift}
 import cats.implicits._

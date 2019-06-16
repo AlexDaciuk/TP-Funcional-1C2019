@@ -1,4 +1,4 @@
-package edu.fiubafuncional.restservice
+package edu.spfsfiuba.restservice
 
 import cats.Applicative
 import cats.effect.Sync
