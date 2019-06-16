@@ -14,10 +14,7 @@ object RestserviceServer {
   def stream[F[_]: ConcurrentEffect](implicit T: Timer[F], C: ContextShift[F]): Stream[F, Nothing] = {
     for {
       client <- BlazeClientBuilder[F](global).stream
-      helloWorldAlg = HelloWorld.impl[F]
-      jokeAlg = Jokes.impl[F](client)
       predictAlg = Predict.impl[F]
-
 
       // Combine Service Routes into an HttpApp.
       // Can also be done via a Router if you

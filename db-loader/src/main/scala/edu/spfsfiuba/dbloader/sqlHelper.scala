@@ -584,13 +584,11 @@ object SqlHelper {
   }
 
   def getApocryphaFromDB(correl_id : Int) : Either[String, Int] = {
-  query = sql"""
+  Try(sql"""
   select apocrypha from data where correl_id = $correl_id
-  """.query[Int]
-
-  Try(query.stream.compile.unique.transact(conexion).unsafeRunSync) match {
+  """.query[Int].unique.transact(conexion).unsafeRunSync) match {
     case Success(apocrypha) => Right(apocrypha)
-    case Failure => Left("No existe ese registro en la db")
+    case Failure(f) => Left("No existe ese registro en la db")
     }
 
   }

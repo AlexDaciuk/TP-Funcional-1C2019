@@ -10,6 +10,7 @@ import org.http4s.client.Client
 import org.http4s.client.dsl.Http4sClientDsl
 import org.http4s.Method._
 import org.http4s.circe._
+import edu.spfsfiuba.dbloader.SqlHelper
 
 trait Predict[F[_]] {
   def get: F[Predict.Apocrypha]
@@ -39,7 +40,7 @@ object Predict {
         case Left(f) => "Algo hay que hacer cuando falla"
       }
 
-      getFromDB(dataL(23)) match {
+      SqlHelper.getApocryphaFromDB(dataL(23)) match {
         case Right(dato) => Predict.Apocrypha(dato)
         case Left(f) => Predict.Apocrypha(predictFromModel(dataL))
       }
