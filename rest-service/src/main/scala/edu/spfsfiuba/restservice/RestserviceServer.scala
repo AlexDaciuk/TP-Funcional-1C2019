@@ -21,9 +21,7 @@ object RestserviceServer {
       // want to extract a segments not checked
       // in the underlying routes.
       httpApp = (
-        RestserviceRoutes.helloWorldRoutes[F](helloWorldAlg) <+>
-        RestserviceRoutes.jokeRoutes[F](jokeAlg) <+>
-        RestserviceRoutes.predict[F](predictAlg)
+        RestserviceRoutes.predictRoutes[F](predictAlg)
       ).orNotFound
 
       // With Middlewares in place

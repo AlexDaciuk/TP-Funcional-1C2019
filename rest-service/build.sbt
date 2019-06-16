@@ -7,9 +7,8 @@ lazy val doobieVersion = "0.7.0"
 enablePlugins(JavaAppPackaging)
 enablePlugins(DockerPlugin)
 
-ProjectRef(file("../db-loader"), "db-loader")
-
 lazy val root = (project in file("."))
+  .dependsOn(dbLoader)
   .settings(
     organization := "edu.spfsfiuba",
     name := "rest-service",
@@ -44,5 +43,8 @@ scalacOptions ++= Seq(
   "-Xfatal-warnings",
 )
 
+lazy val dbLoader = ProjectRef(file("../db-loader"), "root")
+
 mainClass in Compile := Some("edu.spfsfiuba.restservice.Main")
 dockerBaseImage := "openjdk:8"
+

@@ -12,9 +12,10 @@ object RestserviceRoutes {
     val dsl = new Http4sDsl[F]{}
     import dsl._
     HttpRoutes.of[F] {
-      case GET -> Root/ "predict" / data =>
+      case req @ POST -> Root/ "predict" =>
         for {
-          result <- P.getApocrypha(data)
+          request <- req.as[Json]
+          result <- P.get(request)
           response <- Ok(result)
         } yield response
     }
