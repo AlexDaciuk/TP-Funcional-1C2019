@@ -29,11 +29,11 @@ object ApiTest extends App{
   val data = new File("input/csv/test.csv")
   val reader = data.asCsvReader[List[String]](rfc.withHeader)
 
-  def consultar(fila: Json): Stream[Int, IO] = {
+  def consultar(fila: Json): Stream[IO, Int] = {
     val req = POST(fila, Uri.uri("http://localhost:8080/predict/"))
     BlazeClientBuilder[IO](global).stream.flatMap {httpClient =>
       // Decode response
-      Stream.eval(httpClient.expect(req)(jsonOf[Int, IO]))
+      Stream.eval(httpClient.expect(req)(jsonOf[IO, Int]))
     }
   }
 
