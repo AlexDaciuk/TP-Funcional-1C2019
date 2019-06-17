@@ -40,19 +40,13 @@ object ApiTest extends App{
   def iterador(lista: ReadResult[List[String]]): Unit = {
    lista match {
      case Right(l) => {
-       // l(86) = l(86)
-      //     .replace("u'", "\"")
-      //     .replace("\'", "\"")
-      //     .replace("\"\"", "\"")
-      //     .patch(0, "\'", 0)
-      //     .concat("'")
         val l2 = l.updated(86, l(86).replace("u'", "\"")
                  .replace("\'", "\"")
                  .replace("\"\"", "\"")
                  .patch(0, "\'", 0)
                  .concat("'"))
         print(l2)
-        consultar(l.asJson).compile.last.unsafeRunSync
+        consultar(l2.asJson).compile.last.unsafeRunSync
         iterador(reader.next())}
      case Left(k) => println("Termino el CSV")
    }
