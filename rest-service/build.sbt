@@ -3,6 +3,7 @@ lazy val CirceVersion = "0.11.1"
 lazy val Specs2Version = "4.1.0"
 lazy val LogbackVersion = "1.2.3"
 lazy val doobieVersion = "0.7.0"
+lazy val JPMMLVersion = "1.4.11"
 
 enablePlugins(JavaAppPackaging)
 enablePlugins(DockerPlugin)
@@ -12,7 +13,7 @@ lazy val root = (project in file("."))
   .settings(
     organization := "edu.spfsfiuba",
     name := "rest-service",
-    version := "0.0.1-SNAPSHOT",
+    version := "0.1",
     scalaVersion := "2.12.8",
     scalacOptions ++= Seq("-Ypartial-unification"),
     libraryDependencies ++= Seq(
@@ -28,6 +29,8 @@ lazy val root = (project in file("."))
       "org.tpolecat" %% "doobie-specs2"   % doobieVersion,
       "org.typelevel" %% "cats-core" % "1.6.0",
       "org.typelevel" %% "cats-effect" % "1.3.0",
+      "org.jpmml" % "pmml-evaluator" % JPMMLVersion,
+      "org.jpmml" % "pmml-evaluator-extension" % JPMMLVersion,
     ),
     addCompilerPlugin("org.spire-math" %% "kind-projector"     % "0.9.6"),
     addCompilerPlugin("com.olegpy"     %% "better-monadic-for" % "0.2.4")
@@ -40,7 +43,7 @@ scalacOptions ++= Seq(
   "-language:postfixOps",
   "-feature",
   "-Ypartial-unification",
-  "-Xfatal-warnings",
+//  "-Xfatal-warnings",
 )
 
 lazy val dbLoader = ProjectRef(file("../db-loader"), "root")
