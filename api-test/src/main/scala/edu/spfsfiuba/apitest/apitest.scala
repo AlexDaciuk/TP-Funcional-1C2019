@@ -21,32 +21,29 @@ import io.circe._, io.circe.generic.auto._, io.circe.parser._
 import io.circe.syntax._
 import fs2.Stream
 
-
 object ApiTest extends App{
   implicit val cs: ContextShift[IO] = IO.contextShift(global)
   implicit val timer: Timer[IO] = IO.timer(global)
 
   // Leo el CSV de test
-  val data = new File("../assets/csv/test.csv")
+  val data = new File("input/csv/test.csv")
   val reader = data.asCsvReader[List[String]](rfc.withHeader)
 
   def consultar(fila: Json): Stream[Int, IO] = {
     val req = POST(fila, Uri.uri("http://localhost:8080/predict/"))
     BlazeClientBuilder[IO](global).stream.flatMap {httpClient =>
-      // Decode a Hello response
+      // Decode response
       Stream.eval(httpClient.expect(req)(jsonOf[Int, IO]))
     }
   }
 
   def iterador(lista: ReadResult[List[String]]): Unit = {
    lista match {
-     case Right(l) => { println(l)
-        consultar(l.asJson).compile.last.unsafeRunSync
+     case Right(l) => {consultar(l.asJson).compile.last.unsafeRunSync
         iterador(reader.next())}
      case Left(k) => println("Termino el CSV")
    }
   }
 
   iterador(reader.next())
-
 }

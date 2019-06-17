@@ -16,3 +16,10 @@ sbt docker:publishLocal
 cd ..
 chmod 777 shared_files # asegurarse de que se puede generar archivos dentro del directorio con el user de docker
 docker-compose -f docker-compose-etl.yml up etl
+
+# Compilo, creo el container y corro el compose de web server
+cd rest-service
+sbt compile
+sbt docker:publishLocal
+cd ..
+docker-compose -f docker-compose-rest-service.yml up rest-service
