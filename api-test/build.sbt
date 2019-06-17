@@ -17,3 +17,6 @@ libraryDependencies ++= Seq(
   "io.circe" %% "circe-generic" % "0.11.1",
   "io.circe" %% "circe-parser" % "0.11.1"
 )
+
+mainClass in Compile := Some("edu.spfsfiuba.apitest.ApiTest")
+
