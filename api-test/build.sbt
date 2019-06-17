@@ -9,14 +9,14 @@ libraryDependencies ++= Seq(
   "org.http4s" %% "http4s-dsl" % http4sVersion,
   "org.http4s" %% "http4s-blaze-server" % http4sVersion,
   "org.http4s" %% "http4s-blaze-client" % http4sVersion,
+  "org.http4s" %% "http4s-circe" % http4sVersion,
   "org.typelevel" %% "cats-core" % "1.6.0",
   "org.typelevel" %% "cats-effect" % "1.3.0",
   "com.nrinaudo" %% "kantan.csv" % "0.5.1",
   "com.nrinaudo" %% "kantan.csv-cats" % "0.5.1",
   "io.circe"  %% "circe-generic"  % "0.11.1",
-  "io.circe" %% "circe-generic" % "0.11.1",
+  "io.circe" %% "circe-literal" % "0.11.1",
   "io.circe" %% "circe-parser" % "0.11.1"
 )
 
 mainClass in Compile := Some("edu.spfsfiuba.apitest.ApiTest")
-
