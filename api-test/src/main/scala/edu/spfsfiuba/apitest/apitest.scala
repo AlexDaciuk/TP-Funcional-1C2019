@@ -1,40 +1,49 @@
 package edu.spfsfiuba.apitest
 
-import org.http4s.client.blaze._
-import org.http4s.client._
 import scala.concurrent.ExecutionContext.Implicits.global
-import java.util.concurrent._
 import cats._
 import cats.data._
+import cats.syntax.all._
+import cats.implicits._
 import cats.effect._
+import org.http4s._
+import org.http4s.client._
+import org.http4s.client.dsl.io._
+import org.http4s.client.blaze._
+import org.http4s.Uri
+import org.http4s.circe._
+import org.http4s.dsl.io._
+import kantan.csv._ // All kantan.csv types.
+import kantan.csv.ops._ // Enriches types with useful methods.
+import kantan.codecs.resource.ResourceIterator
+import java.io.File
+import io.circe._, io.circe.generic.auto._, io.circe.parser._
+import io.circe.syntax._
+import fs2.Stream
 
-object ApiTest extends App {
-  val blockingEC = ExecutionContext.fromExecutorService(Executors.newFixedThreadPool(5))
-  val httpClient: Client[IO] = JavaNetClientBuilder[IO](blockingEC).create
+object ApiTest extends App{
+  implicit val cs: ContextShift[IO] = IO.contextShift(global)
+  implicit val timer: Timer[IO] = IO.timer(global)
 
   // Leo el CSV de test
   val data = new File("input/csv/test.csv")
   val reader = data.asCsvReader[List[String]](rfc.withHeader)
 
-  def consultar(fila: Json): Int = {
-    val request = Uri.uri("http://localhost:8080/predict/") / fila
-    httpClient.expect[Int](request).unsafeRunSync
-  }
-
-  def iterador(lista: ReadResult[List[String]]): String = {
-    lista match {
-      case Right(l) =>
-        consultar(l.asJson) match {
-          case Int(a) => {
-            println(s"Apocrypha vale : $a")
-            iterador(reader.next())
-          }
-          case _ => println("No tendria que haber llegado aca.")
-        }
-      case Left(k) => println("Termino el CSV")
+  def consultar(fila: Json): Stream[Int, IO] = {
+    val req = POST(fila, Uri.uri("http://localhost:8080/predict/"))
+    BlazeClientBuilder[IO](global).stream.flatMap {httpClient =>
+      // Decode response
+      Stream.eval(httpClient.expect(req)(jsonOf[Int, IO]))
     }
   }
 
-  iterador(reader.next())
+  def iterador(lista: ReadResult[List[String]]): Unit = {
+   lista match {
+     case Right(l) => {consultar(l.asJson).compile.last.unsafeRunSync
+        iterador(reader.next())}
+     case Left(k) => println("Termino el CSV")
+   }
+  }
 
+  iterador(reader.next())
 }
