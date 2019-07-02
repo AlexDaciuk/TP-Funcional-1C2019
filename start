@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 # Creo la imagen de docker de db-loader
 cd db-loader
 sbt compile
