@@ -12,14 +12,13 @@ object SqlHelper {
   implicit val cs = IO.contextShift(ExecutionContexts.synchronous)
   val dbHost: String = scala.util.Properties.envOrElse("DB_HOST", "localhost")
 
-  val conexion = Transactor.fromDriverManager[IO](
+  val conexion : Transactor[IO] = Transactor.fromDriverManager[IO](
     "org.postgresql.Driver", // driver classname
     s"jdbc:postgresql://${dbHost}:5432/funcional", // connect URL (driver-specific)
     "funcional", // user
     "", // password
     ExecutionContexts.synchronous // just for testing
   )
-
 
   def toIntPropio(s: String): Int = {
     try {
@@ -208,7 +207,6 @@ object SqlHelper {
       mai_pulevel: Int,
       maibis_reason: String
   )
-
   case class CuartaParte(mai_city: String,
                          mai_region: String,
                          maitris_score: Int,
@@ -242,8 +240,8 @@ object SqlHelper {
   )
 
   def procesar_primera_parte(lista: List[String]): PrimeraParte = {
-    val slice1 = lista.slice(0, 21)
-    val primeraParte = PrimeraParte(
+    val slice1 : List[String] = lista.slice(0, 21)
+    val primeraParte : PrimeraParte = PrimeraParte(
       toIntPropio(slice1(0)),
       toIntPropio(slice1(1)),
       toIntPropio(slice1(2)),
@@ -268,9 +266,10 @@ object SqlHelper {
     )
     primeraParte
   }
+
   def procesar_segunda_parte(lista: List[String]): SegundaParte = {
-      val slice2 = lista.slice(21, 42)
-      val segundaParte = SegundaParte(
+      val slice2 : List[String] = lista.slice(21, 42)
+      val segundaParte : SegundaParte = SegundaParte(
         toIntPropio(slice2(0)),
         slice2(1),
         toIntPropio(slice2(2)),
@@ -293,13 +292,12 @@ object SqlHelper {
         toIntPropio(slice2(19)),
         toIntPropio(slice2(20))
       )
-
       segundaParte
   }
 
   def procesar_tercera_parte(lista: List[String]): TerceraParte = {
-      val slice3 = lista.slice(42, 64)
-      val terceraParte = TerceraParte(
+      val slice3 : List[String] = lista.slice(42, 64)
+      val terceraParte : TerceraParte = TerceraParte(
         slice3(0),
         slice3(1),
         slice3(2),
@@ -323,13 +321,12 @@ object SqlHelper {
         toIntPropio(slice3(20)),
         slice3(21)
       )
-
       terceraParte
   }
 
   def procesar_cuarta_parte(lista: List[String]): CuartaParte = {
-      val slice4 = lista.slice(64, 85)
-      val cuarteParte = CuartaParte(
+      val slice4 : List[String] = lista.slice(64, 85)
+      val cuarteParte : CuartaParte = CuartaParte(
         slice4(0),
         slice4(1),
         toIntPropio(slice4(2)),
@@ -352,13 +349,12 @@ object SqlHelper {
         toIntPropio(slice4(19)),
         slice4(20)
       )
-
       cuarteParte
   }
 
   def procesar_quinta_parte(lista: List[String]): QuintaParte = {
-      val slice5 = lista.slice(85, 92)
-      val quintaParte = QuintaParte(
+      val slice5 : List[String] = lista.slice(85, 92)
+      val quintaParte : QuintaParte = QuintaParte(
         toIntPropio(slice5(0)),
         slice5(1)
           .replace("u'", "\"")
@@ -375,7 +371,6 @@ object SqlHelper {
 
       quintaParte
   }
-
 
   def insertar(primeraParte: PrimeraParte,
                segundaParte: SegundaParte,
@@ -590,6 +585,5 @@ object SqlHelper {
     case Success(apocrypha) => Right(apocrypha)
     case Failure(f) => Left("No existe ese registro en la db")
     }
-
   }
 }

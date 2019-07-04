@@ -1,0 +1,24 @@
+version: "1"
+services:
+  db:
+    image: "postgres:11.2-alpine"
+    environment:
+      POSTGRES_USER: "funcional"
+    ports:
+      - "5432:5432"
+  rest-service:
+    image: "rest-service:0.1"
+    environment:
+      DB_HOST: database
+    links:
+      - "db:database"
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./shared_files:/opt/docker/output
+    depends_on:
+      - db
+  apitest:
+      image: "apitest:0.1"
+      links:
+        - ""

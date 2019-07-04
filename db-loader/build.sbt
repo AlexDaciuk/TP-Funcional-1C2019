@@ -1,4 +1,4 @@
-scalaVersion := "2.12.7" // Scala 2.12/11
+scalaVersion := "2.12.8" // Scala 2.12/11
 
 scalacOptions += "-Ypartial-unification" // 2.11.9+
 
@@ -11,7 +11,7 @@ lazy val root = project.in(file(".")).
   settings(
     name := "db-loader",
     organization := "edu.spfsfiuba",
-    scalaVersion := "2.11.12",
+    scalaVersion := "2.12.8",
     version := "0.1",
     libraryDependencies ++= Seq(
       "org.tpolecat" %% "doobie-core"     % doobieVersion,
@@ -26,6 +26,3 @@ lazy val root = project.in(file(".")).
 
   mainClass in Compile := Some("edu.spfsfiuba.dbloader.MainDBLoader")
   dockerBaseImage := "openjdk:8"
-
-
-
