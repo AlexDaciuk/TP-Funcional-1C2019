@@ -1,4 +1,4 @@
-version: "1"
+version: "3"
 services:
   db:
     image: "postgres:11.2-alpine"
@@ -20,5 +20,12 @@ services:
       - db
   apitest:
       image: "apitest:0.1"
+      environment:
+        REST_URL: rest-url
       links:
-        - ""
+        - "rest-service:rest-url"
+      depends_on:
+        - db
+        - rest-service
+      volumes:
+        - ./assets:/opt/docker/input

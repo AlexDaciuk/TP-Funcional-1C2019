@@ -26,11 +26,12 @@ object ApiTest extends App{
   implicit val timer: Timer[IO] = IO.timer(global)
 
   // Leo el CSV de test
-  val data : File = new File("../assets/csv/test.csv")
+  val data : File = new File("input/csv/test.csv")
   val reader = data.asCsvReader[List[String]](rfc.withHeader)
+  val url_rest : String = scala.util.Properties.envOrElse("REST_URL", "localhost")
 
   def consultar(fila: Json): Stream[IO, Int] = {
-    val req = POST(fila, Uri.uri("http://localhost:8080/predict"))
+    val req = POST(fila, Uri.uri("http://rest-url:8080/predict"))
     BlazeClientBuilder[IO](global).stream.flatMap {httpClient =>
       // Decode response
       Stream.eval(httpClient.expect(req)(jsonOf[IO, Int]))
@@ -51,6 +52,6 @@ object ApiTest extends App{
      case Left(k) => println("Termino el CSV")
    }
   }
-
+  println(url_rest)
   iterador(reader.next())
 }

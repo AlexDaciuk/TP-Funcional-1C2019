@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # Compilo, creo el container y corro la test de la api con el otro CSV
 cd api-test
 sbt compile
