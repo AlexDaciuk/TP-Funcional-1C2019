@@ -13,9 +13,10 @@ import edu.spfsfiuba.dbloader.SqlHelper
 import org.dmg.pmml.FieldName
 import org.jpmml.evaluator.{Evaluator, EvaluatorUtil, InputField, LoadingModelEvaluatorBuilder}
 import scala.collection.JavaConverters._
+import spfsfiuba.model._
 
 trait Predict[F[_]] {
-  def get(data: Json): F[Predict.Apocrypha]
+  def get(input: Input): F[Predict.Apocrypha]
 }
 
 object Predict {
@@ -42,20 +43,21 @@ object Predict {
   final case class ApocryphaError(e: Throwable) extends RuntimeException
 
   def impl[F[_]: Applicative]: Predict[F] = new Predict[F]{
-    def get(data : Json): F[Apocrypha] = {
-
-      val dataL: List[String] = data.as[List[String]] match {
-        case Right(l) => l
-        case Left(f) => List[String]()
-      }
-
-      SqlHelper.getApocryphaFromDB(dataL(23).toInt) match {
-        case Right(dato: Int) => Predict.Apocrypha(dato).pure[F]
-        case Left(f: String) => Predict.Apocrypha(predictFromModel(dataL)).pure[F]
+    def get(input : Input): F[Apocrypha] = {
+      val dataMap: Map[String, Any] = Input.toMap(input)
+      dataMap.get("apocrypha") match {
+        case Some(value) => {
+          val apocrypha: Int = value.toString.toInt
+          SqlHelper.getApocryphaFromDB(apocrypha) match {
+            case Right(dato: Int) => Predict.Apocrypha(dato).pure[F]
+            case Left(f: String) => Predict.Apocrypha(predictFromModel(dataMap)).pure[F]
+          }
+        }
+        case None => throw new Exception("Failed generating a map from the given input!!") // TODO: Proper error handling
       }
     }
 
-    def predictFromModel(list: List[String]): Int = {
+    def predictFromModel(dataMap: Map[String, Any]): Int = {
       val evaluator: Evaluator = new LoadingModelEvaluatorBuilder()
         .load(new File("/opt/docker/output/model.pmml"))
         .build()
@@ -70,7 +72,7 @@ object Predict {
 
       val arguments = activeFields.map(field => {
         val name: FieldName = field.getName
-        val rawValue = data.get(name.getValue).get
+        val rawValue = dataMap.get(name.getValue).get
         val value = field.prepare(rawValue)
         // Transforming an arbitrary user-supplied value to a known-good PMML value
         (name, value)
@@ -79,6 +81,6 @@ object Predict {
       val results = EvaluatorUtil.decodeAll(evaluator.evaluate(arguments))
       val prediction: Int = results.get("apocrypha").toString.toInt // TODO: Nasty hack to make it work
       prediction
-    } // TODO: Avoid hardcoded input
+    }
   }
 }
