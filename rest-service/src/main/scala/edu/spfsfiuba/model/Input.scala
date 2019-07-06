@@ -108,8 +108,9 @@ object Input {
     implicit val InputDecoder: Decoder[Input] = deriveDecoder[Input]
     implicit def InputEntityDecoder[F[_]: Sync]: EntityDecoder[F, Input] = jsonOf
 
-    def toMap(input: Input) : Map[String, Any] = input.getClass.getDeclaredFields
-      .map( _.getName ) // all field names
-      .zip(input.productIterator.to) // build a list with tuples (fieldName, fieldValue)
-      .toMap // convert it to a map
+    def toMap(input: Input) : Map[String, Any] =  input.getClass.getDeclaredFields
+        .map( _.getName ) // all field names
+        .zip(input.productIterator.to) // build a list with tuples (fieldName, fieldValue)
+        .toMap // convert it to a map
+        .collect { case (key, Some(value)) => (key, value) } // Keep all keys that have some value
 }
