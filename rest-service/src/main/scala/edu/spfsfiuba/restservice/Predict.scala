@@ -45,8 +45,12 @@ object Predict {
   def impl[F[_]: Applicative]: Predict[F] = new Predict[F]{
     def get(input : Input): F[Apocrypha] = {
       val dataMap: Map[String, Any] = Input.toMap(input)
+      println(dataMap.get("apocrypha"))
+      println(dataMap.get("apocrypha").getClass.getSimpleName)
       dataMap.get("apocrypha") match {
         case Some(value) => {
+          println(value)
+          println(value.getClass.getSimpleName)
           val apocrypha: Int = value.toString.toInt
           SqlHelper.getApocryphaFromDB(apocrypha) match {
             case Right(dato: Int) => Predict.Apocrypha(dato).pure[F]
