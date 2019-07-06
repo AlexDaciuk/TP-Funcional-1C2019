@@ -45,19 +45,17 @@ object Predict {
   def impl[F[_]: Applicative]: Predict[F] = new Predict[F]{
     def get(input : Input): F[Apocrypha] = {
       val dataMap: Map[String, Any] = Input.toMap(input)
-      println(dataMap.get("apocrypha"))
-      println(dataMap.get("apocrypha").getClass.getSimpleName)
-      dataMap.get("apocrypha") match {
+      dataMap.get("correl_id").get match {
         case Some(value) => {
           println(value)
           println(value.getClass.getSimpleName)
-          val apocrypha: Int = value.toString.toInt
-          SqlHelper.getApocryphaFromDB(apocrypha) match {
+          val correl_id: Int = value.toString.toInt
+          SqlHelper.getApocryphaFromDB(correl_id) match {
             case Right(dato: Int) => Predict.Apocrypha(dato).pure[F]
             case Left(f: String) => Predict.Apocrypha(predictFromModel(dataMap)).pure[F]
           }
         }
-        case None => throw new Exception("Failed generating a map from the given input!!") // TODO: Proper error handling
+        case None => throw new Exception("correl_id is required") // TODO: Proper error handling
       }
     }
 
@@ -77,6 +75,7 @@ object Predict {
       val arguments = activeFields.map(field => {
         val name: FieldName = field.getName
         val rawValue = dataMap.get(name.getValue).get
+
         val value = field.prepare(rawValue)
         // Transforming an arbitrary user-supplied value to a known-good PMML value
         (name, value)
