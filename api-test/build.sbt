@@ -31,5 +31,7 @@ lazy val root = project.in(file(".")).
     )
 )
 
+lazy val restservice = ProjectRef(file("../rest-service"), "root")
+
 mainClass in Compile := Some("edu.spfsfiuba.apitest.ApiTest")
 dockerBaseImage := "openjdk:8"
