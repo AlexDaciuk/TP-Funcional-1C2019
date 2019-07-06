@@ -27,8 +27,21 @@ object ApiTest extends App{
 
   // Leo el CSV de test
   val data : File = new File("input/csv/test.csv")
-  val reader = data.asCsvReader[List[String]](rfc.withHeader)
+
+  val reader = data.asCsvReader[List[String]](rfc)
+
+  val header = getHeaders(reader.next())
+
   val url_rest : String = scala.util.Properties.envOrElse("REST_URL", "localhost")
+
+  def getHeaders(lista: ReadResult[List[String]]) : List[String] = {
+    lista match {
+      case Right(l) => l
+      case _ => List[String]()
+    }
+  }
+
+  println(header)
 
   def consultar(fila: Json): Stream[IO, Int] = {
     val req = POST(fila, Uri.uri("http://rest-url:8080/predict"))
@@ -41,7 +54,8 @@ object ApiTest extends App{
   def iterador(lista: ReadResult[List[String]]): Unit = {
    lista match {
      case Right(l) => {
-        consultar(l2.asJson).compile.last.unsafeRunSync
+        val tuplas_tmp : List[(String, String)] = header zip l
+        consultar(tuplas_tmp.toMap.asJson).compile.last.unsafeRunSync
         iterador(reader.next())}
      case Left(k) => println("Termino el CSV")
    }
