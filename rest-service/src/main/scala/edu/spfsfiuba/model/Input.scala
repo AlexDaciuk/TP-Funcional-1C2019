@@ -97,7 +97,7 @@ case class Input(
     val paymentsInstallments: Option[Int],
     val same_field_features: Option[String],
     val speed_to_departure: Option[Double],
-    val totalUsdAmount: Option[Int],
+    val totalUsdAmount: Option[Double],
     val triangulation_height: Option[Double],
     val triangulation_height_speed: Option[Double],
     val trip_distance: Option[Double]

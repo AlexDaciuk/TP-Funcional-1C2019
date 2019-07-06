@@ -43,11 +43,11 @@ object ApiTest extends App{
 
   println(header)
 
-  def consultar(fila: Json): Stream[IO, Int] = {
+  def consultar(fila: Json): Stream[IO, Map[String,Int]] = {
     val req = POST(fila, Uri.uri("http://rest-url:8080/predict"))
     BlazeClientBuilder[IO](global).stream.flatMap {httpClient =>
       // Decode response
-      Stream.eval(httpClient.expect(req)(jsonOf[IO, Int]))
+      Stream.eval(httpClient.expect(req)(jsonOf[IO, Map[String,Int]]))
     }
   }
 
