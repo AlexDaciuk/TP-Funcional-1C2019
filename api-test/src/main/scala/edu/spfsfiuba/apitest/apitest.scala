@@ -55,7 +55,7 @@ object ApiTest extends App{
    lista match {
      case Right(l) => {
         val tuplas_tmp : List[(String, String)] = header zip l
-        consultar(tuplas_tmp.toMap.asJson).compile.last.unsafeRunSync
+        consultar((tuplas_tmp.toMap - "same_field_features").filter((t) => t._2.nonEmpty).asJson).compile.last.unsafeRunSync
         iterador(reader.next())}
      case Left(k) => println("Termino el CSV")
    }
