@@ -27,27 +27,35 @@ object ApiTest extends App{
 
   // Leo el CSV de test
   val data : File = new File("input/csv/test.csv")
-  val reader = data.asCsvReader[List[String]](rfc.withHeader)
+
+  val reader = data.asCsvReader[List[String]](rfc)
+
+  val header = getHeaders(reader.next())
+
   val url_rest : String = scala.util.Properties.envOrElse("REST_URL", "localhost")
 
-  def consultar(fila: Json): Stream[IO, Int] = {
+  def getHeaders(lista: ReadResult[List[String]]) : List[String] = {
+    lista match {
+      case Right(l) => l
+      case _ => List[String]()
+    }
+  }
+
+  println(header)
+
+  def consultar(fila: Json): Stream[IO, Map[String,Int]] = {
     val req = POST(fila, Uri.uri("http://rest-url:8080/predict"))
     BlazeClientBuilder[IO](global).stream.flatMap {httpClient =>
       // Decode response
-      Stream.eval(httpClient.expect(req)(jsonOf[IO, Int]))
+      Stream.eval(httpClient.expect(req)(jsonOf[IO, Map[String,Int]]))
     }
   }
 
   def iterador(lista: ReadResult[List[String]]): Unit = {
    lista match {
      case Right(l) => {
-        val l2 : List[String] = l.updated(86, l(86).replace("u'", "\"")
-                 .replace("\'", "\"")
-                 .replace("\"\"", "\"")
-                 .patch(0, "\'", 0)
-                 .concat("'"))
-        print(l2.asJson)
-        consultar(l2.asJson).compile.last.unsafeRunSync
+        val tuplas_tmp : List[(String, String)] = header zip l
+        consultar((tuplas_tmp.toMap - "same_field_features").filter((t) => t._2.nonEmpty).asJson).compile.last.unsafeRunSync
         iterador(reader.next())}
      case Left(k) => println("Termino el CSV")
    }
